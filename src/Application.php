@@ -1,6 +1,6 @@
 <?php
 
-namespace AegisFang\Core;
+namespace AegisFang;
 
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
