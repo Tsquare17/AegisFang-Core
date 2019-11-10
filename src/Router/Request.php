@@ -8,12 +8,12 @@ namespace AegisFang\Router;
  * @package AegisFang\Router
  */
 class Request {
-	public static function uri()
+	public static function uri(): string
 	{
 		return trim($_SERVER['REQUEST_URI'], '/');
 	}
 
-	public static function method()
+	public static function method(): string
 	{
 		return $_SERVER['REQUEST_METHOD'];
 	}

@@ -7,6 +7,10 @@ use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
 
 
+/**
+ * Class Router
+ * @package AegisFang\Router
+ */
 class Router {
 
 	protected $routes = [];
@@ -74,7 +78,8 @@ class Router {
 		}
 	}
 
-	protected function callClass($container, $uri): ?array {
+	protected function callClass($container, $uri): ?array
+	{
 		try {
 			[$class, $method] = $this->getRouteCall($uri);
 
@@ -93,7 +98,8 @@ class Router {
 	 *
 	 * @return null
 	 */
-	protected function normalizeRoutes(): void {
+	protected function normalizeRoutes(): void
+	{
 		$normalizedRoutes = [];
 		foreach($this->routes as $route => $direction) {
 			if($route === '' || strpos($route, '/') !== 0) {
