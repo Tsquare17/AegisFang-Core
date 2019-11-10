@@ -110,9 +110,9 @@ class Router {
 	 *
 	 * @param $uri
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	protected function normalizeUri( $uri ):?string
+	protected function normalizeUri( $uri ): string
 	{
 		if($uri === '' || strpos($uri, '/') !== 0) {
 			return '/' . $uri;
