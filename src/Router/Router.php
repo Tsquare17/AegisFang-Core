@@ -10,9 +10,6 @@ use AegisFang\Container\Exceptions\ContainerException;
 class Router {
 
 	protected $routes = [];
-	protected const REQUESTTYPEKEY = 0;
-	protected const METHODKEY = 1;
-
 
 	public static function load($file)
 	{
@@ -21,18 +18,43 @@ class Router {
 		return $route;
 	}
 
-	public function get($route)
+	public function get($route): void
 	{
 		$this->define($route, 'GET');
 	}
 
-	public function define($route, $type)
+	public function post($route): void
 	{
+		$this->define($route, 'POST');
+	}
+
+	public function put($route): void
+	{
+		$this->define($route, 'PUT');
+	}
+
+	public function patch($route): void
+	{
+		$this->define($route, 'PATCH');
+	}
+
+	public function delete($route): void
+	{
+		$this->define($route, 'DELETE');
+	}
+
+	public function define($route, $type): void
+	{
+		$this->normalizeRoutes();
+
 		$key = array_keys($route)[0];
 		$val = array_values($route)[0];
-		$route = [$key => [$type, $val]];
-		$this->routes = array_merge($this->routes, $route);
-		$this->normalizeRoutes();
+		$route = [$key => [$type => $val]];
+		if(isset($this->routes[$key])) {
+			$this->routes[$key][$type] = $val;
+		} else {
+			$this->routes = array_merge($this->routes, $route);
+		}
 	}
 
 	public function direct($container, $uri)
@@ -40,8 +62,8 @@ class Router {
 		try {
 			$uri = $this->normalizeUri($uri);
 			if (array_key_exists($uri, $this->routes)) {
-				if($this->routes[$uri][self::METHODKEY] instanceof Closure) {
-					return $this->routes[$uri][self::METHODKEY]();
+				if($this->routes[$uri][Request::method()] instanceof Closure) {
+					return $this->routes[$uri][Request::method()]();
 				}
 
 				return $this->callClass($container, $uri);
@@ -54,20 +76,16 @@ class Router {
 
 	protected function callClass($container, $uri): ?array {
 		try {
-			if($_SERVER['REQUEST_METHOD'] !== $this->routes[$uri][self::REQUESTTYPEKEY]) {
-				return '404';
-			}
-
 			[$class, $method] = $this->getRouteCall($uri);
 
 			return [$container->get('App\\Controllers\\' . $class), $method];
 		} catch (Exception $e) {
-			throw new ContainerException($this->routes[$uri][self::METHODKEY] . ' not found');
+			throw new ContainerException($this->routes[$uri][Request::method()] . ' not found');
 		}
 	}
 
 	protected function getRouteCall($uri): array {
-		return explode('::', $this->routes[$uri][self::METHODKEY]);
+		return explode('::', $this->routes[$uri][Request::method()]);
 	}
 
 	/**
