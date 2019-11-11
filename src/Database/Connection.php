@@ -10,7 +10,7 @@ use PDOException;
  * @package AegisFang\Database
  */
 class Connection {
-	public static function make($config)
+	public static function make()
 	{
 		try {
 			$options = getenv('DB_OPTIONS') ?: [PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING];
