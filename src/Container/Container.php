@@ -7,6 +7,7 @@ use AegisFang\Container\Exceptions\NotFoundException;
 use AegisFang\Container\Exceptions\ContainerException;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionParameter;
 
 
 /**
@@ -114,6 +115,34 @@ class Container implements ContainerInterface {
 		}
 
 		return $item->newInstanceArgs($params);
+	}
+
+	public function getMethod( $class, $method )
+	{
+		$reflector = new ReflectionClass($class);
+		// this is how we get some method arguments
+		$params = $reflector->getMethod($method)->getParameters();
+
+		$args = [];
+		foreach($params as $param) {
+			$args[] = $this->getParameter($class, $method, $param);
+		}
+
+		$resolved = [];
+		foreach($args as $arg) {
+			$resolved[] = $this->get($arg);
+		}
+
+		return call_user_func_array([$class, $method], $resolved);
+	}
+
+	public function getParameter( $class, $method, $arg )
+	{
+		$parameter = new ReflectionParameter([$class, $method], $arg->name);
+
+		$type = $parameter->getType();
+
+		return $type->getName();
 	}
 
 	public static function setInstance(Container $container = null): Container {
