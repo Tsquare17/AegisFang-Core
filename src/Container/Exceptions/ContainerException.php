@@ -9,6 +9,6 @@ use Exception;
  * Class ContainerException
  * @package AegisFang\Container\Exceptions
  */
-class ContainerException extends Exception implements ContainerExceptionInterface {
-
+class ContainerException extends Exception implements ContainerExceptionInterface
+{
 }

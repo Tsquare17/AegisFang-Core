@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="AegisFangStandards" namespace="aegisfangstandards">
+    <rule ref="PSR12"/>
+    <file>./</file>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+</ruleset>
