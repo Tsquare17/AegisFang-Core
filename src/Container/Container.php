@@ -2,11 +2,13 @@
 
 namespace AegisFang\Container;
 
+use Closure;
 use Psr\Container\ContainerInterface;
 use AegisFang\Container\Exceptions\NotFoundException;
 use AegisFang\Container\Exceptions\ContainerException;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionFunction;
 use ReflectionParameter;
 
 /**
@@ -162,6 +164,27 @@ class Container implements ContainerInterface
         $type = $parameter->getType();
 
         return $type->getName();
+    }
+
+    /**
+     * @param Closure $closure
+     *
+     * @return mixed
+     * @throws ContainerException
+     * @throws NotFoundException
+     * @throws ReflectionException
+     */
+    public function injectClosure(Closure $closure)
+    {
+        $reflector = new ReflectionFunction($closure);
+        $params = $reflector->getParameters();
+
+        $resolved = [];
+        foreach ($params as $param) {
+            $resolved[] = $this->get($param->getType()->getName());
+        }
+
+        return call_user_func_array($closure, $resolved);
     }
 
     /**

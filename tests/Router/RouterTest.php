@@ -3,7 +3,6 @@
 namespace AegisFang\Tests;
 
 use AegisFang\Container\Container;
-use AegisFang\Router\Request;
 use PHPUnit\Framework\TestCase;
 use AegisFang\Router\Router;
 
@@ -54,5 +53,15 @@ class RouterTest extends TestCase
         ]);
 
         $this->assertEquals('test', $this->router->direct($this->container, '/')->getContent());
+    }
+
+    /** @test */
+    public function controller_route_returns_content(): void
+    {
+        $this->router->get([
+            '/' => '\AegisFang\Tests\Fixtures\Foo::baz'
+        ]);
+
+        $this->assertEquals('baz', $this->router->direct($this->container, '/')->getContent());
     }
 }

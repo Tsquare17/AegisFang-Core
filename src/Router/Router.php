@@ -126,7 +126,7 @@ class Router
             $uri = $this->normalizeUri($uri);
             if (array_key_exists($uri, $this->routes)) {
                 if ($this->routes[$uri][Request::method()] instanceof Closure) {
-                    $this->content = $this->routes[$uri][Request::method()]();
+                    $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
 
                     return $this;
                 }
@@ -137,7 +137,9 @@ class Router
             }
             throw new Exception('No route defined for this URI.');
         } catch (Exception $e) {
-            return '404';
+            $this->content = '404';
+
+            return $this;
         }
     }
 
@@ -159,8 +161,8 @@ class Router
     {
         try {
             [$class, $method] = $this->getRouteCall($uri);
-            if (!strpos($class, '\\')) {
-                $class .= 'App\\Controllers\\';
+            if (strpos($class, '\\') === false) {
+                $class = 'App\\Controllers\\' . $class;
             }
             $call = $this->container->get($class);
 

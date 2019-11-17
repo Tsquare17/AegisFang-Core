@@ -13,6 +13,9 @@ class Connection
 {
     protected $pdo;
 
+    /**
+     * Connection constructor.
+     */
     public function __construct()
     {
         try {
@@ -28,6 +31,9 @@ class Connection
         }
     }
 
+    /**
+     * @return Query
+     */
     public function query(): Query
     {
         return new Query($this->pdo);

@@ -17,12 +17,22 @@ class Query
     protected $where;
     protected $having;
 
+    /**
+     * Query constructor.
+     *
+     * @param $pdo
+     */
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
     }
 
-    public function select($columns = ['*']): Query
+    /**
+     * @param array $columns
+     *
+     * @return $this
+     */
+    public function select($columns = ['*']): self
     {
         $this->select = 'SELECT ';
         $count = count($columns);
@@ -38,27 +48,45 @@ class Query
         return $this;
     }
 
-    public function from($table): Query
+    /**
+     * @param $table
+     *
+     * @return $this
+     */
+    public function from($table): self
     {
         $this->from = $table;
 
         return $this;
     }
 
-    public function where($column): Query
+    /**
+     * @param $column
+     *
+     * @return $this
+     */
+    public function where($column): self
     {
         $this->where = $column;
 
         return $this;
     }
 
-    public function having($value): Query
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function having($value): self
     {
         $this->having = $value;
 
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function run()
     {
         $query = $this->select;
