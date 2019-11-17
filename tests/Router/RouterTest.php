@@ -2,6 +2,8 @@
 
 namespace AegisFang\Tests;
 
+use AegisFang\Container\Container;
+use AegisFang\Router\Request;
 use PHPUnit\Framework\TestCase;
 use AegisFang\Router\Router;
 
@@ -9,10 +11,13 @@ class RouterTest extends TestCase
 {
     protected $router;
 
+    protected $container;
+
     public function setUp(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->router = Router::load(__DIR__ . '/../deps/routes.php');
+        $this->router = Router::load(__DIR__ . '/../Fixtures/routes.php');
+        $this->container = new Container();
     }
 
     /** @test */
@@ -37,5 +42,17 @@ class RouterTest extends TestCase
         foreach ($methods as $method) {
             $this->assertEquals($method . '::route', $routes['/'][$method]);
         }
+    }
+
+    /** @test */
+    public function basic_route_returns_content(): void
+    {
+        $this->router->get([
+            '/' => static function () {
+                return 'test';
+            }
+        ]);
+
+        $this->assertEquals('test', $this->router->direct($this->container, '/')->getContent());
     }
 }

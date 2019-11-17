@@ -23,6 +23,11 @@ class Router
      */
     protected $container;
 
+    /*
+     * @var @content
+     */
+    protected $content;
+
     /**
      * @param $file
      *
@@ -121,15 +126,27 @@ class Router
             $uri = $this->normalizeUri($uri);
             if (array_key_exists($uri, $this->routes)) {
                 if ($this->routes[$uri][Request::method()] instanceof Closure) {
-                    return $this->routes[$uri][Request::method()]();
+                    $this->content = $this->routes[$uri][Request::method()]();
+
+                    return $this;
                 }
 
-                return $this->callClass($uri);
+                $this->content = $this->callClass($uri);
+
+                return $this;
             }
             throw new Exception('No route defined for this URI.');
         } catch (Exception $e) {
             return '404';
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
     }
 
     /**

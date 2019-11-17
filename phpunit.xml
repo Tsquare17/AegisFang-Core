@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit bootstrap="phpunit.php" colors="true">
     <testsuites>
         <testsuite name="unit">
             <directory>tests</directory>
-            <exclude>tests/deps/</exclude>
+            <exclude>tests/Fixtures/</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
