@@ -11,8 +11,6 @@ class ContainerTest extends TestCase
 {
     protected $container;
 
-    protected $class;
-
     public function setUp(): void
     {
         $this->container = new Container();
