@@ -34,20 +34,20 @@ class ContainerTest extends TestCase
     }
 
     /** @test */
-    public function instance_of_bar_is_injected_into_foo_constructor(): void
+    public function can_inject_bar_into_foo_constructor(): void
     {
         $foo = $this->container->get('Foo.Key');
 
-        $this->assertEquals('bar', $foo->foo);
+        $this->assertInstanceOf(Bar::class, $foo->bar);
     }
 
     /** @test */
-    public function instance_of_foo_is_injected_into_bar_method(): void
+    public function can_inject_foo_into_bar_method(): void
     {
         $bar = $this->container->get('Bar.Key');
 
         $barMethod = $this->container->getMethod($bar, 'get');
 
-        $this->assertEquals('baz', $barMethod);
+        $this->assertInstanceOf(Foo::class, $barMethod);
     }
 }
