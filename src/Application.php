@@ -43,11 +43,6 @@ class Application extends Container
         $this->set(Container::class, $this);
     }
 
-    public function getContainer(): Container
-    {
-        return $this->container;
-    }
-
     public function run()
     {
         return Router::load('../config/routes.php')
