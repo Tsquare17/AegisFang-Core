@@ -32,6 +32,14 @@ class Connection
     }
 
     /**
+     * @return PDO
+     */
+    public function get()
+    {
+        return $this->pdo;
+    }
+
+    /**
      * @return Query
      */
     public function query(): Query

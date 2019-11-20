@@ -11,11 +11,16 @@ use PDO;
 class Query
 {
     protected $pdo;
-    protected $select;
-    protected $columns;
+    protected $table;
+    protected $command;
+    protected $columns = [];
+    protected $values;
     protected $from;
     protected $where;
     protected $having;
+    public const SELECT = 'SELECT';
+    public const INSERT = 'INSERT INTO';
+    public const VALUES = 'VALUES';
 
     /**
      * Query constructor.
@@ -28,13 +33,25 @@ class Query
     }
 
     /**
+     * @param $table
+     *
+     * @return $this
+     */
+    public function table($table): self
+    {
+        $this->table = $table;
+
+        return $this;
+    }
+
+    /**
      * @param array $columns
      *
      * @return $this
      */
     public function select($columns = ['*']): self
     {
-        $this->select = 'SELECT ';
+        $this->command = self::SELECT;
         $count = count($columns);
         foreach ($columns as $i => $column) {
             $this->columns .= $column;
@@ -46,6 +63,20 @@ class Query
         }
 
         return $this;
+    }
+
+    public function insert($values): self
+    {
+        $this->command = self::INSERT;
+
+        $this->values = $values;
+
+        return $this;
+    }
+
+    public function into($columns): self
+    {
+        $this->columns[] = $columns;
     }
 
     /**
@@ -84,12 +115,29 @@ class Query
         return $this;
     }
 
+    public function execute()
+    {
+        if ($this->command === self::SELECT) {
+            return $this->runSelect();
+        }
+
+        if ($this->command === self::INSERT) {
+            return $this->runInsert();
+        }
+    }
+
+    public function runInsert()
+    {
+        $query = "{$this->command} `{$this->table}` ({...$this->columns}) VaLUES {...$this->values}";
+        var_dump($query);
+    }
+
     /**
      * @return mixed
      */
-    public function run()
+    public function runSelect()
     {
-        $query = $this->select;
+        $query = $this->command;
         $query .= $this->columns;
         $query .= $this->from;
         $query .= $this->where;
