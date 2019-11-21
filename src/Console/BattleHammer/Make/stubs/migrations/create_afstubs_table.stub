@@ -1,0 +1,27 @@
+<?php
+
+use AegisFang\Database\Table\Blueprint;
+use AegisFang\Database\Migrations\Migration;
+
+/**
+ * Class Create{AFstubs}Table
+ */
+class Create{AFstubs}Table extends Migration
+{
+    /**
+     * Create the {afstubs} table.
+     *
+     * @param Blueprint $blueprint
+     *
+     * @return Blueprint
+     */
+    public function table(Blueprint $blueprint): Blueprint
+    {
+        $blueprint->int('id');
+        $blueprint->string('name');
+        $blueprint->string('email');
+        $blueprint->string('password');
+
+        return $blueprint;
+    }
+}

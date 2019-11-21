@@ -2,29 +2,39 @@
 
 namespace AegisFang\Database\Migrations;
 
+use AegisFang\Database\Table\Blueprint;
 use AegisFang\Database\Table\Builder;
 
 abstract class Migration
 {
-    protected $table;
+    protected $tableName;
 
-    public function __construct($table)
+    /**
+     * Migration constructor.
+     *
+     * @param $tableName
+     */
+    public function __construct($tableName)
     {
-        $this->table = $table;
+        $this->tableName = $tableName;
     }
 
     /**
+     * @param Blueprint $blueprint
+     *
      * @return mixed
      */
-    abstract public function table();
+    abstract public function table(Blueprint $blueprint);
 
     /**
+     * @param Blueprint $blueprint
+     *
      * @return bool
      */
-    public function make()
+    public function make(Blueprint $blueprint): bool
     {
-        $blueprint = $this->table();
-        $table = new Builder($this->table, $blueprint);
+        $blueprint = $this->table($blueprint);
+        $table = new Builder($this->tableName, $blueprint);
 
         return $table->createTable();
     }
@@ -34,6 +44,6 @@ abstract class Migration
      */
     public function unmake(): bool
     {
-        return Builder::destroy($this->table);
+        return Builder::destroy($this->tableName);
     }
 }
