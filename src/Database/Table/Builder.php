@@ -14,12 +14,17 @@ class Builder
     protected $table;
     protected $id;
     protected $columns;
-    protected $relationships;
     protected $statement;
     protected const CREATETABLE = 'CREATE TABLE IF NOT EXISTS';
     protected const DROPTABLE = 'DROP TABLE';
     protected const PRIMARYKEY = 'INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT';
 
+    /**
+     * Builder constructor.
+     *
+     * @param $table
+     * @param Blueprint $blueprint
+     */
     public function __construct($table, Blueprint $blueprint)
     {
         $connection = new Connection();
@@ -29,7 +34,10 @@ class Builder
         $this->columns = $blueprint->columns;
     }
 
-    public function createTable()
+    /**
+     * @return bool
+     */
+    public function createTable(): bool
     {
         $this->statement = self::CREATETABLE . " `{$this->table}` (\r\n";
         $this->setColumns();
@@ -38,13 +46,9 @@ class Builder
         return $this->execute();
     }
 
-    public function destroy()
-    {
-        $this->statement = self::DROPTABLE . " {$this->table}";
-
-        return $this->execute();
-    }
-
+    /**
+     * @return void
+     */
     public function setColumns(): void
     {
         $i = 0;
@@ -63,15 +67,43 @@ class Builder
         }
     }
 
-    public function closeTable()
+    /**
+     * @return void
+     */
+    public function closeTable(): void
     {
         $this->statement .= "\r\n)";
     }
 
-    public function execute()
+    /**
+     * @param $table
+     *
+     * @return bool
+     */
+    public static function destroy($table): bool
+    {
+        $drop = new self($table, new Blueprint());
+        $drop->statement(self::DROPTABLE . " {$table}");
+
+        return $drop->execute();
+    }
+
+    /**
+     * @param $statement
+     *
+     * @return void
+     */
+    protected function statement($statement): void
+    {
+        $this->statement = $statement;
+    }
+
+    /**
+     * @return bool
+     */
+    public function execute(): bool
     {
         $statement = $this->pdo->prepare($this->statement);
-        // TODO: Check if table exists on execute or destroy
         try {
             $result = $statement->execute();
         } catch (\PDOException $e) {

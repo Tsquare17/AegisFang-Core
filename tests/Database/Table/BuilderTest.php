@@ -24,9 +24,7 @@ class BuilderTest extends TestCase
     /** @test */
     public function can_delete_table(): void
     {
-        $blueprint = new Blueprint();
-        $table = new Builder('aegistest', $blueprint);
-        $isDestroyed = $table->destroy();
+        $isDestroyed = Builder::destroy('aegistest');
 
         $this->assertTrue($isDestroyed);
     }
