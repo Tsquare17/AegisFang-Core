@@ -31,6 +31,11 @@ class Application extends Container
         return dirname(__DIR__, 3) . '/';
     }
 
+    public function getBasePath(): string
+    {
+        return $this->basePath;
+    }
+
     public function registerBindings(): void
     {
         static::setInstance($this);

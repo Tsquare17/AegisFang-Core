@@ -2,6 +2,7 @@
 
 namespace AegisFang\Console;
 
+use AegisFang\Console\BattleHammer\Auth\KeyGen;
 use AegisFang\Console\BattleHammer\Make\MakeController;
 use AegisFang\Console\BattleHammer\Migrate\Migrate;
 use AegisFang\Container\Container;
@@ -16,5 +17,6 @@ class App extends Application
         $container->set('BattleHammer', $this);
         $this->add(new MakeController());
         $this->add(new Migrate());
+        $this->add(new KeyGen($container));
     }
 }

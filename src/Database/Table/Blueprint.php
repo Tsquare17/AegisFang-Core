@@ -132,5 +132,4 @@ class Blueprint
     public function onDelete($action): self
     {
     }
-
 }
