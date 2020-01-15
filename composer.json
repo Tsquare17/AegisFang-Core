@@ -27,7 +27,8 @@
   },
   "scripts": {
     "sniff": "phpcs -p --colors --standard=ruleset.xml",
-    "test": "vendor/bin/phpunit --colors=always",
-    "check": "composer sniff && composer test"
+    "check": "composer sniff && composer test",
+    "test-full": "vendor/bin/phpunit --colors=always --testsuite unit_full",
+    "test-no-db": "vendor/bin/phpunit --colors=always --testsuite unit_no_db"
   }
 }

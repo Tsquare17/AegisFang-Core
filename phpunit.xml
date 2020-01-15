@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="phpunit.php" colors="true">
     <testsuites>
-        <testsuite name="unit">
+        <testsuite name="unit_full">
             <directory>tests</directory>
             <exclude>tests/Fixtures/</exclude>
-<!--            Uncomment below to skip database tests. Configure in tests/Fixtures/evn.php-->
-<!--            <exclude>tests/Database/</exclude>-->
+        </testsuite>
+        <testsuite name="unit_no_db">
+            <directory>tests</directory>
+            <exclude>tests/Fixtures/</exclude>
+            <exclude>tests/Database/</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
