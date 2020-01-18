@@ -37,6 +37,6 @@ class JsonResponse extends Response
 
         http_response_code($this->status());
 
-        echo json_encode($this->body(), JSON_THROW_ON_ERROR, 512);
+        echo json_encode($this->body());
     }
 }
