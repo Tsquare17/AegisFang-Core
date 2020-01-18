@@ -132,7 +132,7 @@ class Router
                     return $this;
                 }
 
-                if ($this->routes[$uri]['ANY'] instanceof Closure) {
+                if (isset($this->routes[$uri]['ANY']) && $this->routes[$uri]['ANY'] instanceof Closure) {
                     $this->content = $this->container->injectClosure($this->routes[$uri]['ANY']);
 
                     return $this;
