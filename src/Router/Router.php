@@ -2,6 +2,7 @@
 
 namespace AegisFang\Router;
 
+use Cassandra\Cluster;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
@@ -131,6 +132,12 @@ class Router
                     return $this;
                 }
 
+                if ($this->routes[$uri]['ANY'] instanceof Closure) {
+                    $this->content = $this->container->injectClosure($this->routes[$uri]['ANY']);
+
+                    return $this;
+                }
+
                 $this->content = $this->callClass($uri);
 
                 return $this;
@@ -159,6 +166,7 @@ class Router
      */
     protected function callClass($uri)
     {
+        // Need to check it route is wildcard and register default CRUD methods.
         try {
             [$class, $method] = $this->getRouteCall($uri);
             if (strpos($class, '\\') === false) {
