@@ -91,25 +91,25 @@ class Router
     /**
      * @param $route
      */
-    public function all($route): void
+    public function any($route): void
     {
+        $this->define($route, 'ANY');
     }
 
     /**
-     * @param $route
+     * @param $routes
      * @param $type
      */
-    public function define($route, $type): void
+    public function define($routes, $type): void
     {
         $this->normalizeRoutes();
 
-        $key = array_keys($route)[0];
-        $val = array_values($route)[0];
-        $route = [$key => [$type => $val]];
-        if (isset($this->routes[$key])) {
-            $this->routes[$key][$type] = $val;
-        } else {
-            $this->routes = array_merge($this->routes, $route);
+        foreach ($routes as $route => $controller) {
+            if (isset($this->routes[$route])) {
+                $this->routes[$route][$type] = $controller;
+                continue;
+            }
+            $this->routes = array_merge($this->routes, [$route => [$type => $controller]]);
         }
     }
 
