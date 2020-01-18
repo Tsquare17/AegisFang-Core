@@ -24,7 +24,7 @@ class Router
     protected $container;
 
     /*
-     * @var @content
+     * @var $content
      */
     protected $content;
 
