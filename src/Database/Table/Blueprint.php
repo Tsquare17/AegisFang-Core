@@ -9,8 +9,8 @@ namespace AegisFang\Database\Table;
 class Blueprint
 {
     public $id;
-    public $columns = [];
-    public $relationships = [];
+    public array $columns = [];
+    public array $relationships = [];
 
     /**
      * @param $id

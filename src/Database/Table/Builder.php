@@ -3,6 +3,7 @@
 namespace AegisFang\Database\Table;
 
 use AegisFang\Database\Connection;
+use PDO;
 
 /**
  * Class Builder
@@ -10,11 +11,11 @@ use AegisFang\Database\Connection;
  */
 class Builder
 {
-    protected $pdo;
-    protected $table;
-    protected $id;
-    protected $columns;
-    protected $statement;
+    protected PDO $pdo;
+    protected string $table;
+    protected string $id;
+    protected array $columns;
+    protected string $statement;
     protected const CREATETABLE = 'CREATE TABLE IF NOT EXISTS';
     protected const DROPTABLE = 'DROP TABLE';
     protected const PRIMARYKEY = 'INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT';

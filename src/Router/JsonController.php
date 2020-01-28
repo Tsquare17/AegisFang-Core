@@ -6,7 +6,7 @@ use AegisFang\Http\JsonResponse;
 
 abstract class JsonController extends Controller
 {
-    protected $response;
+    protected JsonResponse $response;
 
     public function __construct(JsonResponse $response)
     {

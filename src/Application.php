@@ -13,11 +13,12 @@ use AegisFang\Router\Request;
  */
 class Application extends Container
 {
-    protected $container;
+    protected Container $container;
 
-    protected $basePath;
+    protected string $basePath;
 
-    protected $config;
+    protected Dotenv $config;
+
 
     public function __construct($basePath = null)
     {

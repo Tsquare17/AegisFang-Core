@@ -12,12 +12,12 @@ trait ResponseTrait
     /*
      * @var $headers
      */
-    protected $headers;
+    protected array $headers;
 
     /*
      * @var $statusCode
      */
-    protected $statusCode;
+    protected int $statusCode;
 
     /**
      * Get the content of the response.

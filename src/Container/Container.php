@@ -17,9 +17,9 @@ use ReflectionParameter;
  */
 class Container implements ContainerInterface
 {
-    protected static $instance;
+    protected static Container $instance;
 
-    protected $services = [];
+    protected array $services = [];
 
     /**
      * Finds an entry of the container by its identifier and returns it.

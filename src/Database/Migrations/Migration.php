@@ -7,7 +7,7 @@ use AegisFang\Database\Table\Builder;
 
 abstract class Migration
 {
-    protected $tableName;
+    protected string $tableName;
 
     /**
      * Migration constructor.

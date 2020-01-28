@@ -4,7 +4,7 @@ namespace AegisFang\Tests\Fixtures;
 
 class Foo
 {
-    public $bar;
+    public Bar $bar;
 
     public function __construct(Bar $bar)
     {

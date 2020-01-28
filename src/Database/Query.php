@@ -13,7 +13,7 @@ class Query
     protected $pdo;
     protected $table;
     protected $command;
-    protected $columns = [];
+    protected array $columns = [];
     protected $values;
     protected $from;
     protected $where;

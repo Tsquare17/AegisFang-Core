@@ -2,7 +2,7 @@
 
 namespace AegisFang\Router;
 
-use Cassandra\Cluster;
+use AegisFang\Container\Container;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
@@ -17,12 +17,12 @@ class Router
     /*
      * @var $routes
      */
-    protected $routes = [];
+    protected array $routes = [];
 
     /*
      * @var $container
      */
-    protected $container;
+    protected Container $container;
 
     /*
      * @var $content
