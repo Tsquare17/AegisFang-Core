@@ -126,7 +126,11 @@ class Router
         try {
             $uri = $this->normalizeUri($uri);
             if (array_key_exists($uri, $this->routes)) {
-                if ($this->routes[$uri][Request::method()] instanceof Closure) {
+                if (
+                    isset($this->routes[$uri][Request::method()])
+                    &&
+                    $this->routes[$uri][Request::method()] instanceof Closure
+                ) {
                     $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
 
                     return $this;

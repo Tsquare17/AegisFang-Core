@@ -6,7 +6,7 @@ use AegisFang\Container\Container;
 use PHPUnit\Framework\TestCase;
 use AegisFang\Router\Router;
 
-class RouterTest extends TestCase
+class RouterGetRequestTest extends TestCase
 {
     protected $router;
 
@@ -63,5 +63,17 @@ class RouterTest extends TestCase
         ]);
 
         $this->assertEquals('baz', $this->router->direct($this->container, '/')->getContent());
+    }
+
+    /** @test */
+    public function wildcard_route_returns_content(): void
+    {
+        $this->router->any([
+            '/wildcard' => static function () {
+                return 'test';
+            }
+        ]);
+
+        $this->assertEquals('test', $this->router->direct($this->container, '/wildcard')->getContent());
     }
 }

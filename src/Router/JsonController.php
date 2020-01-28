@@ -3,9 +3,8 @@
 namespace AegisFang\Router;
 
 use AegisFang\Http\JsonResponse;
-use AegisFang\Http\Response;
 
-abstract class RestController extends Controller
+abstract class JsonController extends Controller
 {
     protected $response;
 
