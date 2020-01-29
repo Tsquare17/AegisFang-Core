@@ -4,6 +4,7 @@ namespace AegisFang\Database\Table;
 
 use AegisFang\Database\Connection;
 use PDO;
+use PDOException;
 
 /**
  * Class Builder
@@ -40,6 +41,7 @@ class Builder
      */
     public function createTable(): bool
     {
+        // try to select 1 from tablename limit 1. if no error it exists, need to fail.
         $this->statement = self::CREATETABLE . " `{$this->table}` (\r\n";
         $this->setColumns();
         $this->closeTable();
@@ -107,7 +109,7 @@ class Builder
         $statement = $this->pdo->prepare($this->statement);
         try {
             $result = $statement->execute();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return false;
         }
 

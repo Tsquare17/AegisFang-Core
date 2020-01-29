@@ -16,7 +16,7 @@ class App extends Application
 
         $container->set('BattleHammer', $this);
         $this->add(new MakeController());
-        $this->add(new Migrate());
+        $this->add(new Migrate($container));
         $this->add(new KeyGen($container));
     }
 }

@@ -8,6 +8,7 @@ use AegisFang\Database\Table\Builder;
 abstract class Migration
 {
     protected string $tableName;
+    protected Blueprint $blueprint;
 
     /**
      * Migration constructor.
@@ -27,14 +28,11 @@ abstract class Migration
     abstract public function table(Blueprint $blueprint);
 
     /**
-     * @param Blueprint $blueprint
-     *
      * @return bool
      */
-    public function make(Blueprint $blueprint): bool
+    public function make(): bool
     {
-        $blueprint = $this->table($blueprint);
-        $table = new Builder($this->tableName, $blueprint);
+        $table = new Builder($this->tableName, $this->table(new Blueprint()));
 
         return $table->createTable();
     }
