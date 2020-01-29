@@ -12,7 +12,7 @@ trait ResponseTrait
     /*
      * @var $headers
      */
-    protected array $headers;
+    protected array $headers = [];
 
     /*
      * @var $statusCode

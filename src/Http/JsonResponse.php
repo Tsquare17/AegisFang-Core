@@ -32,11 +32,10 @@ class JsonResponse extends Response
     {
         foreach ($this->headers() as $key => $value) {
             header($key . ': ' . $value);
-            echo $key . ': ' . $value;
         }
 
         http_response_code($this->status());
 
-        echo json_encode($this->body());
+        echo json_encode($this->body(), JSON_THROW_ON_ERROR, 512);
     }
 }

@@ -6,6 +6,7 @@ use AegisFang\Container\Container;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
+use RuntimeException;
 
 /**
  * Class Router
@@ -146,7 +147,7 @@ class Router
 
                 return $this;
             }
-            throw new Exception('No route defined for this URI.');
+            throw new RuntimeException('No route defined for this URI.');
         } catch (Exception $e) {
             $this->content = '404';
 

@@ -13,9 +13,9 @@ abstract class JsonController extends Controller
         $this->response = $response;
     }
 
-    public function send(...$args)
+    public function send(...$args): void
     {
-        return $this->response->make(
+        $this->response->make(
             ...$args
         )->send();
     }

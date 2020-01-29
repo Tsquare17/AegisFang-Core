@@ -8,9 +8,9 @@ use AegisFang\Router\Router;
 
 class RouterGetRequestTest extends TestCase
 {
-    protected $router;
+    protected Router $router;
 
-    protected $container;
+    protected Container $container;
 
     public function setUp(): void
     {
