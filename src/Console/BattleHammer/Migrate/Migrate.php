@@ -4,6 +4,7 @@ namespace AegisFang\Console\BattleHammer\Migrate;
 
 use AegisFang\Container\Container;
 use AegisFang\Database\Table\Blueprint;
+use AegisFang\Database\Table\Builder;
 use Dotenv\Dotenv;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,6 +40,12 @@ class Migrate extends Command
             $className = $this->filenameSnakeToCamel($file);
             $tableName = $this->getTableName($file);
 
+            $builder = new Builder($tableName, new Blueprint());
+            if ($builder->tableExists()) {
+                $output->writeln("<error>The table '{$tableName}' already exists.</>");
+                return 0;
+            }
+
             include_once $migrationsPath . '/' . $file;
 
             $migration = new $className($tableName);
@@ -47,7 +54,7 @@ class Migrate extends Command
             if ($success) {
                 $output->writeln("<info>Created table {$tableName}</>");
             } else {
-                $output->writeln("<danger>Failed to create table {$tableName}</>");
+                $output->writeln("<error>Failed to create table {$tableName}</>");
             }
         }
 

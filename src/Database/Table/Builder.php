@@ -3,6 +3,7 @@
 namespace AegisFang\Database\Table;
 
 use AegisFang\Database\Connection;
+use AegisFang\Database\Query;
 use PDO;
 use PDOException;
 
@@ -13,6 +14,7 @@ use PDOException;
 class Builder
 {
     protected PDO $pdo;
+    protected string $dbName;
     protected string $table;
     protected string $id;
     protected array $columns;
@@ -31,6 +33,7 @@ class Builder
     {
         $connection = new Connection();
         $this->pdo = $connection->get();
+        $this->dbName = $connection->getName();
         $this->table = $table;
         $this->id = $blueprint->id ?: 'id';
         $this->columns = $blueprint->columns;
@@ -41,12 +44,25 @@ class Builder
      */
     public function createTable(): bool
     {
-        // try to select 1 from tablename limit 1. if no error it exists, need to fail.
+        if ($this->tableExists()) {
+            return false;
+        }
         $this->statement = self::CREATETABLE . " `{$this->table}` (\r\n";
         $this->setColumns();
         $this->closeTable();
 
         return $this->execute();
+    }
+
+    public function tableExists(): bool
+    {
+        $query = new Query();
+        $query->select('*')
+            ->from('information_schema.tables')
+            ->where("table_schema = '{$this->dbName}'")
+            ->where("table_name = '{$this->table}'")
+            ->limit(1);
+        return (bool) $query->execute();
     }
 
     /**

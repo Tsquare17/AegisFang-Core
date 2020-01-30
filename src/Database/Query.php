@@ -17,19 +17,27 @@ class Query
     protected $values;
     protected $from;
     protected $where;
-    protected $having;
-    public const SELECT = 'SELECT';
-    public const INSERT = 'INSERT INTO';
-    public const VALUES = 'VALUES';
+    protected array $statement = [];
+    protected $limit;
+    protected $last;
+    public const EOL = "\r\n";
+    public const SELECT = 'SELECT ';
+    public const FROM = 'FROM ';
+    public const WHERE = 'WHERE ';
+    public const AND = 'AND ';
+    public const INSERT = 'INSERT INTO ';
+    public const VALUES = 'VALUES ';
+    public const LIMIT = 'LIMIT ';
 
     /**
      * Query constructor.
      *
      * @param $pdo
      */
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        $connection = new Connection();
+        $this->pdo = $connection->get();
     }
 
     /**
@@ -51,32 +59,28 @@ class Query
      */
     public function select($columns = ['*']): self
     {
+//        $this->command = self::SELECT;
+//        $count = count($columns);
+//        foreach ($columns as $i => $column) {
+//            $this->columns .= $column;
+//            if ($i !== $count - 1) {
+//                $this->columns .= ', ';
+//            } else {
+//                $this->columns .= ' ';
+//            }
+//        }
         $this->command = self::SELECT;
-        $count = count($columns);
-        foreach ($columns as $i => $column) {
-            $this->columns .= $column;
-            if ($i !== $count - 1) {
-                $this->columns .= ', ';
-            } else {
-                $this->columns .= ' ';
-            }
-        }
+        $this->statement[] = self::SELECT . $columns . self::EOL;
+        $this->last = self::SELECT;
 
         return $this;
     }
 
-    public function insert($values): self
+    public function insert($columns, $values): self
     {
         $this->command = self::INSERT;
-
-        $this->values = $values;
-
-        return $this;
-    }
-
-    public function into($columns): self
-    {
-        $this->columns[] = $columns;
+        $this->statement[] = "({...$this->columns}) VALUES {...$this->values}";
+        $this->last = self::INSERT;
     }
 
     /**
@@ -86,7 +90,9 @@ class Query
      */
     public function from($table): self
     {
-        $this->from = $table;
+        //$this->from = $table;
+        $this->statement[] = self::FROM . $table . self::EOL;
+        $this->last = self::FROM;
 
         return $this;
     }
@@ -98,19 +104,30 @@ class Query
      */
     public function where($column): self
     {
-        $this->where = $column;
+        // should be something like, append to statement  WHERE {$statement}
+        // all of these need to append or push into an array maybe, and then assemble at the end.
+        if ($this->last === self::WHERE) {
+            $this->statement[] = self::AND . $column . self::EOL;
+            $this->last = self::WHERE;
+
+            return $this;
+        }
+        $this->statement[] = self::WHERE . $column . self::EOL;
+        $this->last = self::WHERE;
+
+        //$this->where = $column;
 
         return $this;
     }
 
     /**
-     * @param $value
+     * @param $limit
      *
      * @return $this
      */
-    public function having($value): self
+    public function limit($limit): self
     {
-        $this->having = $value;
+        $this->statement[] = self::LIMIT . $limit;
 
         return $this;
     }
@@ -128,8 +145,10 @@ class Query
 
     public function runInsert()
     {
-        $query = "{$this->command} `{$this->table}` ({...$this->columns}) VaLUES {...$this->values}";
-        var_dump($query);
+        // $query = "{$this->command} `{$this->table}` ({...$this->columns}) VALUES {...$this->values}";
+        $query = $this->pdo->query(...$this->statement);
+
+        return $query->execute();
     }
 
     /**
@@ -137,16 +156,11 @@ class Query
      */
     public function runSelect()
     {
-        $query = $this->command;
-        $query .= $this->columns;
-        $query .= $this->from;
-        $query .= $this->where;
-        $query .= $this->having;
+        $this->statement[] = ';';
+        $query = $this->pdo->query(implode($this->statement));
 
-        $statement = $this->pdo->prepare($query);
+        $result = $query->fetchAll();
 
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_CLASS);
+        return $result;
     }
 }

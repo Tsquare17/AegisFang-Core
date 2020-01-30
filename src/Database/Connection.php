@@ -12,12 +12,14 @@ use PDOException;
 class Connection
 {
     protected $pdo;
+    protected $dbName;
 
     /**
      * Connection constructor.
      */
     public function __construct()
     {
+        $this->dbName = getenv('DB_NAME');
         try {
             $options = getenv('DB_OPTIONS') ?: [PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING];
             $this->pdo = new PDO(
@@ -34,7 +36,7 @@ class Connection
     /**
      * @return PDO
      */
-    public function get()
+    public function get(): PDO
     {
         return $this->pdo;
     }
@@ -45,5 +47,13 @@ class Connection
     public function query(): Query
     {
         return new Query($this->pdo);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->dbName;
     }
 }
