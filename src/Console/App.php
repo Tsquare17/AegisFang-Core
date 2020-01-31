@@ -4,6 +4,7 @@ namespace AegisFang\Console;
 
 use AegisFang\Console\BattleHammer\Auth\KeyGen;
 use AegisFang\Console\BattleHammer\Make\MakeController;
+use AegisFang\Console\BattleHammer\Make\MakeMigration;
 use AegisFang\Console\BattleHammer\Migrate\Migrate;
 use AegisFang\Container\Container;
 use Symfony\Component\Console\Application;
@@ -15,7 +16,8 @@ class App extends Application
         parent::__construct('AegisFang', $version);
 
         $container->set('BattleHammer', $this);
-        $this->add(new MakeController());
+        $this->add(new MakeController($container));
+        $this->add(new MakeMigration($container));
         $this->add(new Migrate($container));
         $this->add(new KeyGen($container));
     }

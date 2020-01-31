@@ -11,4 +11,43 @@ abstract class Make extends Command
         $this->setDescription($description);
         parent::__construct('make:' . $name);
     }
+
+    /**
+     * Replace PascalCase stub placeholders.
+     *
+     * @param string $stub
+     *
+     * @param string $new
+     * @return string
+     */
+    public function replaceStubPascalCase(string $stub, string $new): string
+    {
+        return preg_replace('/\$\:\$/', $new, $stub);
+    }
+
+    /**
+     * Replace snake_case stub placeholders.
+     *
+     * @param string $stub
+     *
+     * @param string $new
+     * @return string
+     */
+    public function replaceStubSnakeCase(string $stub, string $new): string
+    {
+        return preg_replace('/\$\:\:\$/', $new, $stub);
+    }
+
+    /**
+     * Replace snake_case singular placeholders.
+     *
+     * @param string $stub
+     *
+     * @param string $new
+     * @return string
+     */
+    public function replaceStubSnakeCaseSingular(string $stub, string $new): string
+    {
+        return preg_replace('/\$\:s\:\$/', $new, $stub);
+    }
 }

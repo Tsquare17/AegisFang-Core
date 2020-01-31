@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Controllers;
+
+use AegisFang\Router\JsonController;
+
+/**
+ * Class $:$
+ */
+class $:$ extends JsonController
+{
+    public function index(): void
+    {
+        $this->send(
+            []
+        );
+    }
+}

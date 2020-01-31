@@ -4,12 +4,12 @@ use AegisFang\Database\Table\Blueprint;
 use AegisFang\Database\Migrations\Migration;
 
 /**
- * Class Create{AFstubs}Table
+ * Class Create$:$Table
  */
-class Create{AFstubs}Table extends Migration
+class Create$:$Table extends Migration
 {
     /**
-     * Create the {afstubs} table.
+     * Create the $::$ table.
      *
      * @param Blueprint $blueprint
      *
@@ -17,10 +17,8 @@ class Create{AFstubs}Table extends Migration
      */
     public function table(Blueprint $blueprint): Blueprint
     {
-        $blueprint->int('id');
-        $blueprint->string('name');
-        $blueprint->string('email');
-        $blueprint->string('password');
+        $blueprint->id('$:s:$_id');
+        $blueprint->string('$:s:$_title');
 
         return $blueprint;
     }
