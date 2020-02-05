@@ -28,7 +28,11 @@ class MakeController extends Make
     {
         $controllersPath = $this->container->getBasePath() . 'app/controllers/';
 
-        $newControllerName = $input->getArgument('name') . 'Controller';
+        $newControllerName = $input->getArgument('name');
+        if (strpos(strrev($input->getArgument('name')), strrev('Controller')) !== 0) {
+            $newControllerName .= 'Controller';
+        }
+
         $newFile = $controllersPath . $newControllerName . '.php';
 
         if (file_exists($newFile)) {
