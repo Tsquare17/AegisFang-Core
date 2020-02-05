@@ -26,6 +26,7 @@ class Migrate extends Command
         $this->addArgument('migration file', InputArgument::OPTIONAL);
     }
 
+    // TODO: Add ability to run a single migration.
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $migrationsPath = $this->container->getBasePath() . 'database/migrations';

@@ -10,13 +10,13 @@ use PDO;
  */
 class Query
 {
-    protected $pdo;
-    protected $table;
-    protected $command;
-    protected array $columns = [];
-    protected $values;
-    protected $from;
-    protected $where;
+    protected PDO $pdo;
+    protected string $table;
+    protected string $command;
+    protected string $columns;
+    protected array $values;
+    protected string $from;
+    protected string $where;
     protected array $statement = [];
     protected $limit;
     protected $last;
@@ -25,8 +25,8 @@ class Query
     public const FROM = 'FROM ';
     public const WHERE = 'WHERE ';
     public const AND = 'AND ';
-    public const INSERT = 'INSERT INTO ';
-    public const VALUES = 'VALUES ';
+    public const INSERT = 'INSERT INTO';
+    public const VALUES = ' VALUES ';
     public const LIMIT = 'LIMIT ';
 
     /**
@@ -53,22 +53,12 @@ class Query
     }
 
     /**
-     * @param array $columns
+     * @param string $columns
      *
      * @return $this
      */
-    public function select($columns = ['*']): self
+    public function select($columns = '*'): self
     {
-//        $this->command = self::SELECT;
-//        $count = count($columns);
-//        foreach ($columns as $i => $column) {
-//            $this->columns .= $column;
-//            if ($i !== $count - 1) {
-//                $this->columns .= ', ';
-//            } else {
-//                $this->columns .= ' ';
-//            }
-//        }
         $this->command = self::SELECT;
         $this->statement[] = self::SELECT . $columns . self::EOL;
         $this->last = self::SELECT;
@@ -79,8 +69,18 @@ class Query
     public function insert($columns, $values): self
     {
         $this->command = self::INSERT;
-        $this->statement[] = "({...$this->columns}) VALUES {...$this->values}";
+        $this->columns = '(`' . implode('`,`', $columns) . '`)';
+        $this->values = $values;
         $this->last = self::INSERT;
+
+        return $this;
+    }
+
+    public function into(string $table): self
+    {
+        $this->table = $table;
+
+        return $this;
     }
 
     /**
@@ -88,9 +88,8 @@ class Query
      *
      * @return $this
      */
-    public function from($table): self
+    public function from(string $table): self
     {
-        //$this->from = $table;
         $this->statement[] = self::FROM . $table . self::EOL;
         $this->last = self::FROM;
 
@@ -104,8 +103,6 @@ class Query
      */
     public function where($column): self
     {
-        // should be something like, append to statement  WHERE {$statement}
-        // all of these need to append or push into an array maybe, and then assemble at the end.
         if ($this->last === self::WHERE) {
             $this->statement[] = self::AND . $column . self::EOL;
             $this->last = self::WHERE;
@@ -114,8 +111,6 @@ class Query
         }
         $this->statement[] = self::WHERE . $column . self::EOL;
         $this->last = self::WHERE;
-
-        //$this->where = $column;
 
         return $this;
     }
@@ -143,12 +138,31 @@ class Query
         }
     }
 
-    public function runInsert()
+    public function runInsert(): bool
     {
-        // $query = "{$this->command} `{$this->table}` ({...$this->columns}) VALUES {...$this->values}";
-        $query = $this->pdo->query(...$this->statement);
+        $insert = "{$this->command} `{$this->table}` {$this->columns}" . self::VALUES . $this->getValuePlaceholders();
 
-        return $query->execute();
+        return $this->pdo->prepare($insert)->execute($this->values);
+    }
+
+    /**
+     * Generate the appropriate number of value placeholders.
+     *
+     * @return string
+     */
+    private function getValuePlaceholders()
+    {
+        $values = '(';
+        $count = count($this->values);
+        for ($i = 0; $i < $count; $i++) {
+            $values .= '?';
+            if ($i !== $count - 1) {
+                $values .= ',';
+            }
+        }
+        $values .= ')';
+
+        return $values;
     }
 
     /**
@@ -159,8 +173,6 @@ class Query
         $this->statement[] = ';';
         $query = $this->pdo->query(implode($this->statement));
 
-        $result = $query->fetchAll();
-
-        return $result;
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }
