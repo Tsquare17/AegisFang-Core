@@ -30,7 +30,7 @@
   },
   "scripts": {
     "sniff": "phpcs -p --colors --standard=ruleset.xml",
-    "check": "composer sniff && composer test",
+    "check": "composer sniff && composer test-full",
     "test-full": "vendor/bin/phpunit --colors=always --testsuite unit_full",
     "test-no-db": "vendor/bin/phpunit --colors=always --testsuite unit_no_db"
   }
