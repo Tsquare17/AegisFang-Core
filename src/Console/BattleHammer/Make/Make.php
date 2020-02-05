@@ -13,6 +13,19 @@ abstract class Make extends Command
     }
 
     /**
+     * Replace Name placeholders.
+     *
+     * @param string $stub
+     * @param string $new
+     *
+     * @return string
+     */
+    public function replaceName(string $stub, string $new): string
+    {
+        return preg_replace('/\$\:n\:\$/', $new, $stub);
+    }
+
+    /**
      * Replace PascalCase stub placeholders.
      *
      * @param string $stub
