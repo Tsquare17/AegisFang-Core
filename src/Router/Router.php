@@ -121,9 +121,9 @@ class Router
      * @param $container
      * @param $uri
      *
-     * @return string
+     * @return Router
      */
-    public function direct($container, $uri)
+    public function direct($container, $uri): self
     {
         $this->container = $container;
         $this->container->set(self::class, $this);
