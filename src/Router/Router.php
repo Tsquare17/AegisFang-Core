@@ -113,7 +113,8 @@ class Router
                 $this->routes[$route][$type] = $controller;
                 continue;
             }
-            $this->routes = array_merge($this->routes, [$route => [$type => $controller]]);
+
+            $this->routes[$route] = [$type => $controller];
         }
     }
 
