@@ -4,7 +4,6 @@ namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
 use AegisFang\Http\Error\NotFound;
-use AegisFang\Http\Response;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
@@ -16,7 +15,6 @@ use RuntimeException;
  */
 class Router
 {
-
     /*
      * @var $routes
      */
@@ -33,11 +31,11 @@ class Router
     protected $content;
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return Router
      */
-    public static function load($file): Router
+    public static function load(string $file): Router
     {
         $route = new static();
         require $file;
@@ -45,66 +43,66 @@ class Router
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function get($route): void
+    public function get(array $route): void
     {
         $this->define($route, 'GET');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function post($route): void
+    public function post(array $route): void
     {
         $this->define($route, 'POST');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function put($route): void
+    public function put(array $route): void
     {
         $this->define($route, 'PUT');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function patch($route): void
+    public function patch(array $route): void
     {
         $this->define($route, 'PATCH');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function delete($route): void
+    public function delete(array $route): void
     {
         $this->define($route, 'DELETE');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function options($route): void
+    public function options(array $route): void
     {
         $this->define($route, 'OPTIONS');
     }
 
     /**
-     * @param $route
+     * @param array $route
      */
-    public function any($route): void
+    public function any(array $route): void
     {
         $this->define($route, 'ANY');
     }
 
     /**
-     * @param $routes
-     * @param $type
+     * @param array $routes
+     * @param string $type
      */
-    public function define($routes, $type): void
+    public function define(array $routes, string $type): void
     {
         $this->normalizeRoutes();
 
@@ -119,15 +117,14 @@ class Router
     }
 
     /**
-     * @param $container
-     * @param $uri
+     * @param Container $container
+     * @param string $uri
      *
      * @return Router
      */
-    public function direct($container, $uri): self
+    public function direct(Container $container, string $uri): self
     {
         $this->container = $container;
-        $this->container->set(self::class, $this);
 
         try {
             $uri = $this->normalizeUri($uri);
@@ -170,12 +167,12 @@ class Router
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      *
      * @return mixed
      * @throws ContainerException
      */
-    protected function callClass($uri)
+    protected function callClass(string $uri)
     {
         // Need to check if route is wildcard and register default CRUD methods.
         try {
@@ -198,11 +195,11 @@ class Router
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      *
      * @return array
      */
-    protected function getRouteCall($uri): array
+    protected function getRouteCall(string $uri): array
     {
         return explode('::', $this->routes[$uri][Request::method()]);
     }
@@ -228,11 +225,11 @@ class Router
     /**
      * Make sure URI begins with /
      *
-     * @param $uri
+     * @param string $uri
      *
      * @return string
      */
-    protected function normalizeUri($uri): string
+    protected function normalizeUri(string $uri): string
     {
         if ($uri === '' || strpos($uri, '/') !== 0) {
             return '/' . $uri;
