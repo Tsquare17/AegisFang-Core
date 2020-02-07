@@ -51,7 +51,9 @@ class Application extends Container
 
     public function run()
     {
-        return Router::load('../config/routes.php')
-                     ->direct($this, Request::uri());
+        $router = Router::load('../config/routes.php');
+        $this->set(Router::class, $router);
+
+        $router->direct($this, Request::uri());
     }
 }

@@ -83,7 +83,7 @@ class Container implements ContainerInterface
      *
      * @return ReflectionClass|null
      */
-    public function resolve($id): ?ReflectionClass
+    public function resolve($id)
     {
         try {
             $name = $id;
@@ -91,6 +91,9 @@ class Container implements ContainerInterface
                 $name = $this->services[$id];
                 if (is_callable($name)) {
                     return $name();
+                }
+                if (is_object($name)) {
+                    return $name;
                 }
             }
             return (new ReflectionClass($name));

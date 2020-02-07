@@ -3,6 +3,8 @@
 namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
+use AegisFang\Http\Error\NotFound;
+use AegisFang\Http\Response;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
@@ -124,6 +126,8 @@ class Router
     public function direct($container, $uri)
     {
         $this->container = $container;
+        $this->container->set(self::class, $this);
+
         try {
             $uri = $this->normalizeUri($uri);
             if (array_key_exists($uri, $this->routes)) {
@@ -149,7 +153,8 @@ class Router
             }
             throw new RuntimeException('No route defined for this URI.');
         } catch (Exception $e) {
-            $this->content = '404';
+            $response = new NotFound();
+            $response->send();
 
             return $this;
         }
@@ -171,12 +176,13 @@ class Router
      */
     protected function callClass($uri)
     {
-        // Need to check it route is wildcard and register default CRUD methods.
+        // Need to check if route is wildcard and register default CRUD methods.
         try {
             [$class, $method] = $this->getRouteCall($uri);
             if (strpos($class, '\\') === false) {
                 $class = 'App\\Controllers\\' . $class;
             }
+
             $call = $this->container->get($class);
 
             return $this->callMethod($call, $method);
