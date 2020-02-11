@@ -32,7 +32,6 @@ class Query
     /**
      * Query constructor.
      *
-     * @param $pdo
      */
     public function __construct()
     {
@@ -66,6 +65,12 @@ class Query
         return $this;
     }
 
+    /**
+     * @param $columns
+     * @param $values
+     *
+     * @return $this
+     */
     public function insert($columns, $values): self
     {
         $this->command = self::INSERT;
@@ -76,6 +81,11 @@ class Query
         return $this;
     }
 
+    /**
+     * @param string $table
+     *
+     * @return $this
+     */
     public function into(string $table): self
     {
         $this->table = $table;
@@ -136,6 +146,8 @@ class Query
         if ($this->command === self::INSERT) {
             return $this->runInsert();
         }
+
+        return false;
     }
 
     public function runInsert(): bool

@@ -20,9 +20,9 @@ class RouterPostRequestTest extends TestCase
     }
 
     /** @test */
-    public function wildcard_route_returns_content(): void
+    public function rest_route_returns_content(): void
     {
-        $this->router->any([
+        $this->router->rest([
             '/wildcard' => static function () {
                 return 'test';
             }

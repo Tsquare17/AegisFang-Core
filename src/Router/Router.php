@@ -30,6 +30,11 @@ class Router
      */
     protected $content;
 
+    /*
+     * @var REQUEST_METHODS
+     */
+    protected const REQUEST_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
+
     /**
      * @param string $file
      *
@@ -69,14 +74,6 @@ class Router
     /**
      * @param array $route
      */
-    public function patch(array $route): void
-    {
-        $this->define($route, 'PATCH');
-    }
-
-    /**
-     * @param array $route
-     */
     public function delete(array $route): void
     {
         $this->define($route, 'DELETE');
@@ -93,9 +90,9 @@ class Router
     /**
      * @param array $route
      */
-    public function any(array $route): void
+    public function rest(array $route): void
     {
-        $this->define($route, 'ANY');
+        $this->defineRestRoutes($route);
     }
 
     /**
@@ -113,6 +110,31 @@ class Router
             }
 
             $this->routes[$route] = [$type => $controller];
+        }
+    }
+
+    public function defineRestRoutes(array $routes): void
+    {
+        $this->normalizeRoutes();
+
+        foreach (self::REQUEST_METHODS as $method) {
+            foreach ($routes as $route => $controller) {
+                if (isset($this->routes[ $route ])) {
+                    if (! $controller instanceof Closure) {
+                        $this->routes[ $route ][ $method ] = $controller . '::' . strtolower($method);
+                        continue;
+                    }
+                    $this->routes[ $route ][ $method ] = $controller;
+                    continue;
+                }
+
+                if (! $controller instanceof Closure) {
+                    $this->routes[ $route ] = [ $method => $controller . '::' . strtolower($method)];
+                    continue;
+                }
+
+                $this->routes[ $route ] = [ $method => $controller ];
+            }
         }
     }
 
@@ -135,12 +157,6 @@ class Router
                     $this->routes[$uri][Request::method()] instanceof Closure
                 ) {
                     $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
-
-                    return $this;
-                }
-
-                if (isset($this->routes[$uri]['ANY']) && $this->routes[$uri]['ANY'] instanceof Closure) {
-                    $this->content = $this->container->injectClosure($this->routes[$uri]['ANY']);
 
                     return $this;
                 }

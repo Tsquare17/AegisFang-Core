@@ -5,6 +5,7 @@ namespace AegisFang\Console\BattleHammer\Make;
 use AegisFang\Container\Container;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeController extends Make
@@ -21,7 +22,8 @@ class MakeController extends Make
 
     public function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED);
+        $this->addArgument('name', InputArgument::REQUIRED, 'Name of the controller.');
+        $this->addOption('restful', 'r', InputOption::VALUE_NONE, 'Create RESTFul controller.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -40,7 +42,11 @@ class MakeController extends Make
             return 0;
         }
 
-        $stub = $this->getControllerStub();
+        if ($input->getOption('restful')) {
+            $stub = $this->getRestControllerStub();
+        } else {
+            $stub = $this->getControllerStub();
+        }
 
         $replacedStub = $this->replaceStubPascalCase($stub, $newControllerName);
 
@@ -57,12 +63,22 @@ class MakeController extends Make
     }
 
     /**
-     * Get the contents of the Controller stub file.
+     * Get the contents of the controller stub file.
      *
      * @return string
      */
     public function getControllerStub(): string
     {
         return file_get_contents($this->stubsPath . '/controllers/Controller.stub');
+    }
+
+    /**
+     * Get the contents of the RESTful controller stub file.
+     *
+     * @return string
+     */
+    public function getRestControllerStub(): string
+    {
+        return file_get_contents($this->stubsPath . '/controllers/RestController.stub');
     }
 }

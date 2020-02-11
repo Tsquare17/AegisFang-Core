@@ -28,7 +28,7 @@ class RouterGetRequestTest extends TestCase
     /** @test */
     public function route_defining_methods_define_their_respective_routes(): void
     {
-        $methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
+        $methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
 
         foreach ($methods as $method) {
             $this->router->{strtolower($method)}([
@@ -66,9 +66,9 @@ class RouterGetRequestTest extends TestCase
     }
 
     /** @test */
-    public function wildcard_route_returns_content(): void
+    public function rest_route_returns_content(): void
     {
-        $this->router->any([
+        $this->router->rest([
             '/wildcard' => static function () {
                 return 'test';
             }

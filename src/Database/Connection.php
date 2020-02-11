@@ -11,8 +11,8 @@ use PDOException;
  */
 class Connection
 {
-    protected $pdo;
-    protected $dbName;
+    protected PDO $pdo;
+    protected string $dbName;
 
     /**
      * Connection constructor.
@@ -46,7 +46,7 @@ class Connection
      */
     public function query(): Query
     {
-        return new Query($this->pdo);
+        return new Query();
     }
 
     /**
