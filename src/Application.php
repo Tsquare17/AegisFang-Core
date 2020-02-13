@@ -5,7 +5,7 @@ namespace AegisFang;
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
-use AegisFang\Router\Request;
+use AegisFang\Http\Request;
 
 /**
  * Class Application
@@ -54,6 +54,6 @@ class Application extends Container
         $router = Router::load('../config/routes.php');
         $this->set(Router::class, $router);
 
-        $router->direct($this, Request::uri());
+        $router->direct($this);
     }
 }

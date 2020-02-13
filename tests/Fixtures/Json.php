@@ -20,4 +20,13 @@ class Json extends JsonController
             $data
         );
     }
+
+    public function getUrlParam($id, $name): void
+    {
+        $this->send(
+            [
+                $id => $name,
+            ]
+        );
+    }
 }

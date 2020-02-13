@@ -18,7 +18,7 @@ class $:$ extends JsonController
         );
     }
 
-	public function get()
+	public function get(): void
 	{
 		$this->send(
 			[
@@ -27,7 +27,7 @@ class $:$ extends JsonController
 		);
     }
 
-	public function post()
+	public function post(): void
 	{
 		$this->send(
 			[
@@ -36,7 +36,7 @@ class $:$ extends JsonController
 		);
 	}
 
-	public function put()
+	public function put(): void
 	{
 		$this->send(
 			[
@@ -45,20 +45,11 @@ class $:$ extends JsonController
 		);
     }
 
-	public function delete()
+	public function delete(): void
 	{
 		$this->send(
 			[
 				'delete'
-			]
-		);
-    }
-
-	public function options()
-	{
-		$this->send(
-			[
-				'options'
 			]
 		);
     }

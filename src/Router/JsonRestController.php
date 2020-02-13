@@ -17,13 +17,11 @@ class JsonRestController
 
     public function send(...$args): void
     {
-        $return = [
-            'routes' => $this->router->getRoutes(),
-            'data' => $args
-        ];
-
         $this->response->make(
-            $return
+            [
+                'routes' => $this->router->getRoutes(),
+                'data' => $args
+            ]
         )->send();
     }
 }

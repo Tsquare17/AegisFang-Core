@@ -2,6 +2,7 @@
 
 namespace AegisFang\Container;
 
+use AegisFang\Http\Request;
 use Closure;
 use Psr\Container\ContainerInterface;
 use AegisFang\Container\Exceptions\NotFoundException;
@@ -98,7 +99,7 @@ class Container implements ContainerInterface
             }
             return (new ReflectionClass($name));
         } catch (ReflectionException $e) {
-            echo $e->getMessage();
+            // Log error
         }
     }
 
@@ -146,7 +147,7 @@ class Container implements ContainerInterface
 
         $resolved = [];
         foreach ($args as $arg) {
-            $resolved[] = $this->get($arg);
+            $resolved[] = $this->get($arg) ?: $arg;
         }
 
         return call_user_func_array([$class, $method], $resolved);
@@ -158,6 +159,8 @@ class Container implements ContainerInterface
      * @param $arg
      *
      * @return mixed
+     * @throws ContainerException
+     * @throws NotFoundException
      * @throws ReflectionException
      */
     public function getParameter($class, $method, $arg)
@@ -166,7 +169,34 @@ class Container implements ContainerInterface
 
         $type = $parameter->getType();
 
-        return $type->getName();
+        if ($type !== null) {
+            return $type->getName();
+        }
+
+        return $this->tryHttpParams($parameter->getName());
+    }
+
+    /**
+     * @param $parameter
+     *
+     * @return mixed
+     * @throws ContainerException
+     * @throws NotFoundException
+     */
+    public function tryHttpParams($parameter)
+    {
+        $request = $this->get(Request::class);
+
+        foreach ($request->getParams() as $param => $value) {
+            if ($parameter === $param) {
+                return $value;
+            }
+        }
+        foreach ($request->postParams() as $param => $value) {
+            if ($parameter === $param) {
+                return $value;
+            }
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
+use AegisFang\Http\Request;
 use AegisFang\Http\Error\NotFound;
 use Closure;
 use Exception;
@@ -24,6 +25,11 @@ class Router
      * @var $container
      */
     protected Container $container;
+
+    /*
+     * @var $request
+     */
+    protected Request $request;
 
     /*
      * @var $content
@@ -113,6 +119,9 @@ class Router
         }
     }
 
+    /**
+     * @param array $routes
+     */
     public function defineRestRoutes(array $routes): void
     {
         $this->normalizeRoutes();
@@ -139,16 +148,20 @@ class Router
     }
 
     /**
-     * @param Container $container
-     * @param string $uri
+     * @param Container   $container
+     *
+     * @param string|null $uri
      *
      * @return Router
      */
-    public function direct(Container $container, string $uri): self
+    public function direct(Container $container, string $uri = null): self
     {
         $this->container = $container;
+        $this->request = new Request();
+        $this->container->set(Request::class, $this->request);
 
         try {
+            $uri = $uri ?: Request::uri();
             $uri = $this->normalizeUri($uri);
             if (array_key_exists($uri, $this->routes)) {
                 if (
@@ -190,7 +203,6 @@ class Router
      */
     protected function callClass(string $uri)
     {
-        // Need to check if route is wildcard and register default CRUD methods.
         try {
             [$class, $method] = $this->getRouteCall($uri);
             if (strpos($class, '\\') === false) {
