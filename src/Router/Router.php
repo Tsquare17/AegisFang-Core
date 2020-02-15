@@ -146,7 +146,11 @@ class Router
     {
         [$routes, $type] = $this->lastRegisteredRoutes;
         foreach ($routes as $route => $controller) {
-            $this->middleware[$route] = [$type => $middleware];
+            if (isset($this->middleware[$route][$type])) {
+                $this->middleware[$route][$type][] = $middleware;
+                continue;
+            }
+            $this->middleware[$route] = [$type => [$middleware]];
         }
 
         return $this;
@@ -328,9 +332,11 @@ class Router
             && isset($this->middleware[$uri][Request::method()])
             && $this->middleware[$uri][Request::method()] !== null
         ) {
-            try {
-                $this->container->get($this->middleware[$uri][Request::method()]);
-            } catch (Exception $e) {
+            foreach ($this->middleware[$uri][Request::method()] as $middleware) {
+                try {
+                    $this->container->get($middleware);
+                } catch (Exception $e) {
+                }
             }
         }
     }
