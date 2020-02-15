@@ -4,6 +4,7 @@ namespace AegisFang\Tests;
 
 use AegisFang\Container\Container;
 use Fixtures\Middleware;
+use Fixtures\SecondMiddleware;
 use PHPUnit\Framework\TestCase;
 use AegisFang\Router\Router;
 use AegisFang\Tests\Fixtures\Rest;
@@ -242,5 +243,24 @@ class RouterTest extends TestCase
         $this->router->direct($this->container, '/');
 
         $this->expectOutputString('Not Found');
+    }
+
+    /** @test */
+    public function more_than_one_middleware_can_be_registered_on_a_route(): void
+    {
+        $this->router->get(
+            [
+                '/' => static function () {
+                    echo ' controller last';
+                }
+            ]
+        )->middleware(Middleware::class)
+            ->middleware(SecondMiddleware::class);
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $this->router->direct($this->container, '/');
+
+        $this->expectOutputString('middleware first second middleware controller last');
     }
 }
