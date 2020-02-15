@@ -3,6 +3,7 @@
 namespace AegisFang\Tests;
 
 use AegisFang\Container\Container;
+use Fixtures\Middleware;
 use PHPUnit\Framework\TestCase;
 use AegisFang\Router\Router;
 use AegisFang\Tests\Fixtures\Rest;
@@ -205,5 +206,41 @@ class RouterTest extends TestCase
         $this->expectOutputString(json_encode([
             'option'
         ], JSON_THROW_ON_ERROR, 512));
+    }
+
+    /** @test */
+    public function can_set_middleware_on_a_route(): void
+    {
+        $this->router->get(
+            [
+                '/' => static function () {
+                    echo ' controller second';
+                }
+            ]
+        )->middleware(Middleware::class);
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $this->router->direct($this->container, '/');
+
+        $this->expectOutputString('middleware first controller second');
+    }
+
+    /** @test */
+    public function middleware_only_runs_on_specified_route_type(): void
+    {
+        $this->router->get(
+            [
+                '/' => static function () {
+                    echo 'get';
+                }
+            ]
+        )->middleware(Middleware::class);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+
+        $this->router->direct($this->container, '/');
+
+        $this->expectOutputString('Not Found');
     }
 }

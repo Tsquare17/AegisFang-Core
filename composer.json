@@ -19,7 +19,8 @@
     "vlucas/phpdotenv": "^3.6",
     "ext-pdo": "*",
     "symfony/console": "^4.3",
-    "ext-json": "*"
+    "ext-json": "*",
+    "psr/log": "^1.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

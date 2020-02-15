@@ -3,6 +3,7 @@
 namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
+use AegisFang\Container\Exceptions\NotFoundException;
 use AegisFang\Http\Request;
 use AegisFang\Http\Error\NotFound;
 use Closure;
@@ -16,29 +17,18 @@ use RuntimeException;
  */
 class Router
 {
-    /*
-     * @var $routes
-     */
     protected array $routes = [];
 
-    /*
-     * @var $container
-     */
+    protected array $lastRegisteredRoutes = [];
+
     protected Container $container;
 
-    /*
-     * @var $request
-     */
     protected Request $request;
 
-    /*
-     * @var $content
-     */
     protected $content;
 
-    /*
-     * @var REQUEST_METHODS
-     */
+    protected array $middleware = [];
+
     protected const REQUEST_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
 
     /**
@@ -55,59 +45,85 @@ class Router
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function get(array $route): void
+    public function get(array $route): Router
     {
         $this->define($route, 'GET');
+
+        return $this;
     }
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function post(array $route): void
+    public function post(array $route): Router
     {
         $this->define($route, 'POST');
+
+        return $this;
     }
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function put(array $route): void
+    public function put(array $route): Router
     {
         $this->define($route, 'PUT');
+
+        return $this;
     }
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function delete(array $route): void
+    public function delete(array $route): Router
     {
         $this->define($route, 'DELETE');
+
+        return $this;
     }
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function options(array $route): void
+    public function options(array $route): Router
     {
         $this->define($route, 'OPTIONS');
+
+        return $this;
     }
 
     /**
      * @param array $route
+     *
+     * @return Router
      */
-    public function rest(array $route): void
+    public function rest(array $route): Router
     {
         $this->defineRestRoutes($route);
+
+        return $this;
     }
 
     /**
-     * @param array $routes
+     * @param array  $routes
      * @param string $type
      */
     public function define(array $routes, string $type): void
     {
         $this->normalizeRoutes();
+
+        $this->lastRegisteredRoutes = [$routes, $type];
 
         foreach ($routes as $route => $controller) {
             if (isset($this->routes[$route])) {
@@ -119,6 +135,14 @@ class Router
         }
     }
 
+    public function middleware(string $middleware): void
+    {
+        [$routes, $type] = $this->lastRegisteredRoutes;
+        foreach ($routes as $route => $controller) {
+            $this->middleware[$route] = [$type => $middleware];
+        }
+    }
+
     /**
      * @param array $routes
      */
@@ -126,8 +150,11 @@ class Router
     {
         $this->normalizeRoutes();
 
+        $this->lastRegisteredRoutes = [];
+
         foreach (self::REQUEST_METHODS as $method) {
             foreach ($routes as $route => $controller) {
+                $this->lastRegisteredRoutes[] = [$route, $method];
                 if (isset($this->routes[ $route ])) {
                     if (! $controller instanceof Closure) {
                         $this->routes[ $route ][ $method ] = $controller . '::' . strtolower($method);
@@ -157,13 +184,18 @@ class Router
     public function direct(Container $container, string $uri = null): self
     {
         $this->container = $container;
+
         $this->request = new Request();
+
         $this->container->set(Request::class, $this->request);
 
         try {
             $uri = $uri ?: Request::uri();
             $uri = $this->normalizeUri($uri);
+
             if (array_key_exists($uri, $this->routes)) {
+                $this->registerMiddleware($uri);
+
                 if (
                     isset($this->routes[$uri][Request::method()])
                     &&
@@ -271,5 +303,24 @@ class Router
     public function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    /**
+     * Register middleware for the route.
+     *
+     * @param string $uri
+     */
+    public function registerMiddleware(string $uri): void
+    {
+        if (
+            array_key_exists($uri, $this->middleware)
+            && isset($this->middleware[$uri][Request::method()])
+            && $this->middleware[$uri][Request::method()] !== null
+        ) {
+            try {
+                $this->container->get($this->middleware[$uri][Request::method()]);
+            } catch (Exception $e) {
+            }
+        }
     }
 }

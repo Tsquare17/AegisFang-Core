@@ -5,7 +5,6 @@ namespace AegisFang;
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
-use AegisFang\Http\Request;
 
 /**
  * Class Application
@@ -20,7 +19,7 @@ class Application extends Container
     protected Dotenv $config;
 
 
-    public function __construct($basePath = null)
+    public function __construct(string $basePath = null)
     {
         $this->basePath = $basePath ?: $this->setBasePath();
 
