@@ -135,12 +135,21 @@ class Router
         }
     }
 
-    public function middleware(string $middleware): void
+    /**
+     * Collect middleware.
+     *
+     * @param string $middleware
+     *
+     * @return Router
+     */
+    public function middleware(string $middleware): Router
     {
         [$routes, $type] = $this->lastRegisteredRoutes;
         foreach ($routes as $route => $controller) {
             $this->middleware[$route] = [$type => $middleware];
         }
+
+        return $this;
     }
 
     /**
@@ -298,6 +307,8 @@ class Router
     }
 
     /**
+     * Get all registered routes.
+     *
      * @return array
      */
     public function getRoutes(): array
