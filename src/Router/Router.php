@@ -3,9 +3,9 @@
 namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
-use AegisFang\Container\Exceptions\NotFoundException;
 use AegisFang\Http\Request;
 use AegisFang\Http\Error\NotFound;
+use AegisFang\Log\Logger;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
@@ -25,7 +25,9 @@ class Router
 
     protected Request $request;
 
-    protected $content;
+    protected Logger $logger;
+
+    protected ?string $content;
 
     protected array $middleware = [];
 
@@ -34,11 +36,14 @@ class Router
     /**
      * @param string $file
      *
+     * @param string $basePath
+     *
      * @return Router
      */
     public static function load(string $file): Router
     {
         $route = new static();
+        $route->logger = new Logger();
         require $file;
         return $route;
     }
@@ -127,6 +132,13 @@ class Router
 
         foreach ($routes as $route => $controller) {
             if (isset($this->routes[$route])) {
+                if (isset($this->routes[$route][$type])) {
+                    $this->logger->notice(
+                        'Multiple route definitions.',
+                        ['route' => $this->routes[$route][$type]]
+                    );
+                }
+
                 $this->routes[$route][$type] = $controller;
                 continue;
             }
