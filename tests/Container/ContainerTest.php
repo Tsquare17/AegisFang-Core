@@ -14,6 +14,7 @@ class ContainerTest extends TestCase
 
     public function setUp(): void
     {
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../Fixtures/config';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->container = new Container();
         $this->container->set('Foo.Key', Foo::class);

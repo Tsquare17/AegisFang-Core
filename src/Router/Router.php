@@ -240,9 +240,11 @@ class Router
                     return $this;
                 }
 
-                $this->content = $this->callClass($uri);
+                if (isset($this->routes[$uri][Request::method()])) {
+                    $this->content = $this->callClass($uri);
 
-                return $this;
+                    return $this;
+                }
             }
             throw new RuntimeException('No route defined for this URI.');
         } catch (Exception $e) {

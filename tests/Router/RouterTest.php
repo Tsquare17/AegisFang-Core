@@ -21,6 +21,7 @@ class RouterTest extends TestCase
 
     public function setUp(): void
     {
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../Fixtures/config';
         $this->router = Router::load(__DIR__ . '/../Fixtures/routes.php');
         $this->container = new Container();
     }
@@ -230,6 +231,8 @@ class RouterTest extends TestCase
     /** @test */
     public function middleware_only_runs_on_specified_route_type(): void
     {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+
         $this->router->get(
             [
                 '/' => static function () {
@@ -237,8 +240,6 @@ class RouterTest extends TestCase
                 }
             ]
         )->middleware(Middleware::class);
-
-        $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $this->router->direct($this->container, '/');
 
@@ -248,6 +249,8 @@ class RouterTest extends TestCase
     /** @test */
     public function more_than_one_middleware_can_be_registered_on_a_route(): void
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
         $this->router->get(
             [
                 '/' => static function () {
@@ -256,8 +259,6 @@ class RouterTest extends TestCase
             ]
         )->middleware(Middleware::class)
             ->middleware(SecondMiddleware::class);
-
-        $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $this->router->direct($this->container, '/');
 

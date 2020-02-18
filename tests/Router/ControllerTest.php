@@ -14,6 +14,7 @@ class ControllerTest extends TestCase
 
     public function setUp(): void
     {
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../Fixtures/config';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->router = Router::load(__DIR__ . '/../Fixtures/routes.php');
         $this->container = new Container();
