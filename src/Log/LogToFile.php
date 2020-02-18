@@ -16,38 +16,6 @@ class LogToFile extends Logger implements LoggerInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function log($level, $message, array $context = []): void
-    {
-        switch ($level) {
-            case 'emergency':
-                $this->emergency($message, $context);
-                break;
-            case 'alert':
-                $this->alert($message, $context);
-                break;
-            case 'critical':
-                $this->critical($message, $context);
-                break;
-            case 'error':
-                $this->error($message, $context);
-                break;
-            case 'warning':
-                $this->warning($message, $context);
-                break;
-            case 'notice':
-                $this->notice($message, $context);
-                break;
-            case 'info':
-                $this->info($message, $context);
-                break;
-            case 'debug':
-                $this->debug($message, $context);
-        }
-    }
-
-    /**
      * Write to log.
      *
      * @param       $level
