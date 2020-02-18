@@ -3,6 +3,7 @@
 namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
+use AegisFang\Container\Exceptions\NotFoundException;
 use AegisFang\Http\Request;
 use AegisFang\Http\Error\NotFound;
 use AegisFang\Log\Logger;
@@ -43,7 +44,7 @@ class Router
     public static function load(string $file): Router
     {
         $route = new static();
-        $route->logger = new Logger();
+        $route->logger = Logger::getLogger();
         require $file;
         return $route;
     }
@@ -180,7 +181,15 @@ class Router
         foreach (self::REQUEST_METHODS as $method) {
             foreach ($routes as $route => $controller) {
                 $this->lastRegisteredRoutes[] = [$route, $method];
+
                 if (isset($this->routes[ $route ])) {
+                    if (isset($this->routes[$route][$method])) {
+                        $this->logger->notice(
+                            'Multiple route definitions.',
+                            ['route' => $this->routes[$route][$method]]
+                        );
+                    }
+
                     if (! $controller instanceof Closure) {
                         $this->routes[ $route ][ $method ] = $controller . '::' . strtolower($method);
                         continue;
@@ -237,6 +246,14 @@ class Router
             }
             throw new RuntimeException('No route defined for this URI.');
         } catch (Exception $e) {
+            $this->logger->warning(
+                'Failed to match route.',
+                [
+                    'route' => Request::method() . ' ' . $uri,
+                    'exception' => $e->getMessage(),
+                ]
+            );
+
             $response = new NotFound();
             $response->send();
 
@@ -256,7 +273,6 @@ class Router
      * @param string $uri
      *
      * @return mixed
-     * @throws ContainerException
      */
     protected function callClass(string $uri)
     {
@@ -270,13 +286,33 @@ class Router
 
             return $this->callMethod($call, $method);
         } catch (Exception $e) {
-            throw new ContainerException($this->routes[$uri][Request::method()] . ' not found');
+            $this->logger->critical(
+                'Failed to call route controller',
+                ['exception' => $e->getMessage()]
+            );
         }
     }
 
     protected function callMethod($class, $method)
     {
-        return $this->container->getMethod($class, $method);
+        try {
+            return $this->container->getMethod($class, $method);
+        } catch (ContainerException $e) {
+            $this->logger->critical(
+                'Failed to get controller from container.',
+                ['exception' => $e->getMessage()]
+            );
+        } catch (NotFoundException $e) {
+            $this->logger->warning(
+                'Not found.',
+                ['exception' => $e->getMessage()]
+            );
+        } catch (\ReflectionException $e) {
+            $this->logger->warning(
+                'Reflection exception.',
+                ['exception' => $e->getMessage()]
+            );
+        }
     }
 
     /**
@@ -348,6 +384,10 @@ class Router
                 try {
                     $this->container->get($middleware);
                 } catch (Exception $e) {
+                    $this->logger->warning(
+                        'Failed to get middleware.',
+                        ['exception' => $e->getMessage()]
+                    );
                 }
             }
         }
