@@ -12,7 +12,7 @@ class LogFileManager
     {
         $this->formatter = new LineFormatter(
             null,
-            null,
+            'Y-m-d H:i:s',
             false,
             true
         );
