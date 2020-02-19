@@ -2,17 +2,20 @@
 
 namespace AegisFang\Log;
 
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger as Monolog;
 use Psr\Log\LoggerInterface;
 
-class LogToFile extends Logger implements LoggerInterface
+class LogToFile extends Logger
 {
     protected LogFileManager $logFileManager;
 
-    public function __construct()
+    protected string $logChannel;
+
+    public function __construct(string $logChannel = 'AegisFang')
     {
         $this->logFileManager = new LogFileManager();
+        $this->logChannel = $logChannel;
     }
 
     /**
@@ -38,25 +41,16 @@ class LogToFile extends Logger implements LoggerInterface
      */
     protected function logDriver($level): LoggerInterface
     {
-        $streamHandler = new StreamHandler(
+        $streamHandler = new RotatingFileHandler(
             $this->logFileManager->getPathToLog(),
+            $this->getMaxFiles(),
             $this->getLogLevel($level)
         );
         $streamHandler->setFormatter($this->logFileManager->getFormat());
 
-        return new MonoLog($this->getLogChannel(), [
+        return new MonoLog($this->logChannel, [
             $streamHandler
         ]);
-    }
-
-    /**
-     * Get the log channel.
-     *
-     * @return string
-     */
-    protected function getLogChannel(): string
-    {
-        return 'AegisFang';
     }
 
     /**
@@ -78,10 +72,15 @@ class LogToFile extends Logger implements LoggerInterface
      *
      * @return bool
      */
-    private function shouldLog($level): bool
+    protected function shouldLog($level): bool
     {
         $applicationLogLevel = getenv('APP_LOG_LEVEL') ?: 'DEBUG';
 
         return $this->getLogLevel($applicationLogLevel) <= $this->getLogLevel(strtoupper($level));
+    }
+
+    protected function getMaxFiles(): int
+    {
+        return 10;
     }
 }
