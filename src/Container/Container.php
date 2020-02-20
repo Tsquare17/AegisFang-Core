@@ -3,6 +3,7 @@
 namespace AegisFang\Container;
 
 use AegisFang\Http\Request;
+use AegisFang\Log\Logger;
 use Closure;
 use Psr\Container\ContainerInterface;
 use AegisFang\Container\Exceptions\NotFoundException;
@@ -20,7 +21,14 @@ class Container implements ContainerInterface
 {
     protected static Container $instance;
 
+    protected Logger $logger;
+
     protected array $services = [];
+
+    public function __construct()
+    {
+        $this->logger = Logger::getLogger();
+    }
 
     /**
      * Finds an entry of the container by its identifier and returns it.
@@ -55,11 +63,7 @@ class Container implements ContainerInterface
      */
     public function has($id): bool
     {
-        try {
-            $item = $this->resolve($id);
-        } catch (NotFoundException $e) {
-            return false;
-        }
+        $item = $this->resolve($id);
 
         return $item->isInstantiable();
     }
@@ -82,7 +86,7 @@ class Container implements ContainerInterface
     /**
      * @param $id
      *
-     * @return ReflectionClass|null
+     * @return mixed|ReflectionClass
      */
     public function resolve($id)
     {
@@ -99,7 +103,10 @@ class Container implements ContainerInterface
             }
             return (new ReflectionClass($name));
         } catch (ReflectionException $e) {
-            // Log error
+            $this->logger->warning(
+                'Failed to resolve service.',
+                ['exception' => $e->getMessage()]
+            );
         }
     }
 

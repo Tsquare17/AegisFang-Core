@@ -2,6 +2,7 @@
 
 namespace AegisFang\Database;
 
+use AegisFang\Log\Logger;
 use PDO;
 use PDOException;
 
@@ -29,7 +30,11 @@ class Connection
                 $options
             );
         } catch (PDOException $e) {
-            die($e->getMessage());
+            $logger = Logger::getLogger();
+            $logger->critical(
+                'Database connection failed.',
+                ['Exception' => $e->getMessage(), 'Line' => $e->getLine()]
+            );
         }
     }
 
