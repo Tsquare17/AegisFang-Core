@@ -27,12 +27,30 @@ class Strings
     /**
      * Convert snake case to pascal case.
      *
-     * @param string $name
+     * @param string $string
      *
      * @return string
      */
-    public static function snakeToPascal(string $name): string
+    public static function snakeToPascal(string $string): string
     {
-        return str_replace('_', '', ucwords($name, '_'));
+        return str_replace('_', '', ucwords($string, '_'));
+    }
+
+    /**
+     * Convert pascal case to snake case.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function pascalToSnake(string $string): string
+    {
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $string, $matches);
+
+        foreach ($matches[0] as &$match) {
+            $match = ($match === strtoupper($match)) ? strtolower($match) : lcfirst($match);
+        }
+
+        return implode('_', $matches[0]);
     }
 }
