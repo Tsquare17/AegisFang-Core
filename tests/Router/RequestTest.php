@@ -13,12 +13,14 @@ class RequestTest extends TestCase
     {
         $_GET = [
             'id' => '1',
-            'var' => 'foo'
+            'var' => 'foo',
+            'get' => 'got',
         ];
 
         $_POST = [
             'id' => '2',
-            'var' => 'bar'
+            'var' => 'bar',
+            'post' => 'posted',
         ];
 
         $this->request = new Request();
@@ -37,18 +39,19 @@ class RequestTest extends TestCase
     {
         $_POST['REQUEST_METHOD_OVERRIDE'] = 'PUT';
 
-        $this->assertEquals(Request::method(), 'PUT');
+        $this->assertEquals('PUT', Request::method());
     }
 
     /** @test */
     public function can_collect_get_parameters(): void
     {
         $this->assertEquals(
-            $this->request->getParams(),
             [
                 'id' => '1',
-                'var' => 'foo'
-            ]
+                'var' => 'foo',
+                'get' => 'got',
+            ],
+            $this->request->getParams()
         );
     }
 
@@ -56,11 +59,33 @@ class RequestTest extends TestCase
     public function can_collect_post_parameters(): void
     {
         $this->assertEquals(
-            $this->request->postParams(),
             [
                 'id' => '2',
-                'var' => 'bar'
-            ]
+                'var' => 'bar',
+                'post' => 'posted',
+            ],
+            $this->request->postParams()
+        );
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function can_access_request_get_parameter_via_magic_method(): void
+    {
+        $this->assertEquals(
+            'got',
+            $this->request->get
+        );
+    }
+
+    /** @test */
+    public function can_access_request_post_parameter_via_magick_method(): void
+    {
+        $this->assertEquals(
+            'posted',
+            $this->request->post
         );
     }
 }
