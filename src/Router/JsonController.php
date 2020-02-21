@@ -3,15 +3,18 @@
 namespace AegisFang\Router;
 
 use AegisFang\Http\JsonResponse;
+use AegisFang\Http\Request;
 
 abstract class JsonController extends Controller
 {
     protected JsonResponse $response;
+    protected Request $request;
     protected array $guarded = [];
 
-    public function __construct(JsonResponse $response)
+    public function __construct(JsonResponse $response, Request $request)
     {
         $this->response = $response;
+        $this->request  = $request;
     }
 
     public function send(...$args): void

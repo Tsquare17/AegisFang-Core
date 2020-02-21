@@ -80,4 +80,16 @@ class Request
     {
         return $this->getParams;
     }
+
+    /**
+     * Access parameters like class properties.
+     *
+     * @param $name
+     *
+     * @return mixed|null
+     */
+    public function __get($name)
+    {
+        return $this->getParams()[$name] ?? $this->postParams()[$name] ?? null;
+    }
 }

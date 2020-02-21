@@ -3,15 +3,16 @@
 namespace AegisFang\Router;
 
 use AegisFang\Http\JsonResponse;
+use AegisFang\Http\Request;
 
 class JsonRestController extends JsonController
 {
     protected JsonResponse $response;
     protected Router $router;
 
-    public function __construct(JsonResponse $response, Router $router)
+    public function __construct(JsonResponse $response, Request $request, Router $router)
     {
-        parent::__construct($response);
+        parent::__construct($response, $request);
         $this->router = $router;
     }
 

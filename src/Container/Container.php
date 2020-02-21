@@ -86,10 +86,14 @@ class Container implements ContainerInterface
     /**
      * @param $id
      *
-     * @return mixed|ReflectionClass
+     * @return void|mixed|ReflectionClass
      */
     public function resolve($id)
     {
+        if ($id === null) {
+            return;
+        }
+
         try {
             $name = $id;
             if (isset($this->services[$id])) {
@@ -103,9 +107,12 @@ class Container implements ContainerInterface
             }
             return (new ReflectionClass($name));
         } catch (ReflectionException $e) {
-            $this->logger->warning(
-                'Failed to resolve service.',
-                ['exception' => $e->getMessage()]
+            $this->logger->notice(
+                'Container failed to resolve service.',
+                [
+                    'exception' => $e->getMessage(),
+                    'potential cause' => 'Is this a request parameter?'
+                ]
             );
         }
     }

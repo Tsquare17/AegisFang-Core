@@ -2,6 +2,7 @@
 
 namespace AegisFang;
 
+use AegisFang\Log\Logger;
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
@@ -24,6 +25,8 @@ class Application extends Container
         $this->basePath = $basePath ?: $this->setBasePath();
 
         $this->registerBindings();
+
+        parent::__construct();
     }
 
     public function setBasePath(): string
