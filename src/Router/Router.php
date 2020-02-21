@@ -158,6 +158,13 @@ class Router
     public function middleware(string $middleware): Router
     {
         [$routes, $type] = $this->lastRegisteredRoutes;
+        // TODO: First determine if the route was a rest route. those need handled differently.
+        // If it's a rest route..
+        if (isset($routes[0])) {
+            $this->collectRestfulMiddleware($middleware);
+
+            return $this;
+        }
         foreach ($routes as $route => $controller) {
             if (isset($this->middleware[$route][$type])) {
                 $this->middleware[$route][$type][] = $middleware;
@@ -393,5 +400,27 @@ class Router
                 }
             }
         }
+    }
+
+    /**
+     * Collect middleware specified on REST routes.
+     *
+     * @param string $middleware
+     *
+     * @return Router
+     */
+    public function collectRestfulMiddleware(string $middleware): Router
+    {
+        $routes = $this->lastRegisteredRoutes;
+
+        foreach ($routes as $route) {
+            if (isset($this->middleware[$route[0]][$route[1]])) {
+                $this->middleware[$route[0]][$route[1]][] = $middleware;
+                continue;
+            }
+            $this->middleware[$route[0]][$route[1]][] = $middleware;
+        }
+
+        return $this;
     }
 }
