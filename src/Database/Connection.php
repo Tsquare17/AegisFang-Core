@@ -35,6 +35,7 @@ class Connection
                 'Database connection failed.',
                 ['Exception' => $e->getMessage(), 'Line' => $e->getLine()]
             );
+            die('Database connection failed');
         }
     }
 

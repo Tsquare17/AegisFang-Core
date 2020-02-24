@@ -37,8 +37,6 @@ class Router
     /**
      * @param string $file
      *
-     * @param string $basePath
-     *
      * @return Router
      */
     public static function load(string $file): Router
@@ -158,18 +156,19 @@ class Router
     public function middleware(string $middleware): Router
     {
         [$routes, $type] = $this->lastRegisteredRoutes;
-        // TODO: First determine if the route was a rest route. those need handled differently.
-        // If it's a rest route..
+
         if (isset($routes[0])) {
             $this->collectRestfulMiddleware($middleware);
 
             return $this;
         }
+
         foreach ($routes as $route => $controller) {
             if (isset($this->middleware[$route][$type])) {
                 $this->middleware[$route][$type][] = $middleware;
                 continue;
             }
+
             $this->middleware[$route] = [$type => [$middleware]];
         }
 
@@ -230,44 +229,40 @@ class Router
 
         $this->container->set(Request::class, $this->request);
 
-        try {
-            $uri = $uri ?: Request::uri();
-            $uri = $this->normalizeUri($uri);
+        $uri = $uri ?: Request::uri();
+        $uri = $this->normalizeUri($uri);
 
-            if (array_key_exists($uri, $this->routes)) {
-                $this->registerMiddleware($uri);
+        if (array_key_exists($uri, $this->routes)) {
+            $this->runMiddleware($uri);
 
-                if (
-                    isset($this->routes[$uri][Request::method()])
-                    &&
-                    $this->routes[$uri][Request::method()] instanceof Closure
-                ) {
-                    $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
+            if (
+                isset($this->routes[$uri][Request::method()])
+                &&
+                $this->routes[$uri][Request::method()] instanceof Closure
+            ) {
+                $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
 
-                    return $this;
-                }
-
-                if (isset($this->routes[$uri][Request::method()])) {
-                    $this->content = $this->callClass($uri);
-
-                    return $this;
-                }
+                return $this;
             }
-            throw new RuntimeException('No route defined for this URI.');
-        } catch (Exception $e) {
-            $this->logger->warning(
-                'Failed to match route.',
-                [
-                    'route' => Request::method() . ' ' . $uri,
-                    'exception' => $e->getMessage(),
-                ]
-            );
 
-            $response = new NotFound();
-            $response->send();
+            if (isset($this->routes[$uri][Request::method()])) {
+                $this->content = $this->callClass($uri);
 
-            return $this;
+                return $this;
+            }
         }
+
+        $this->logger->warning(
+            'Failed to match route.',
+            [
+                'route' => Request::method() . ' ' . $uri,
+            ]
+        );
+
+        $response = new NotFound();
+        $response->send();
+
+        return $this;
     }
 
     /**
@@ -382,7 +377,7 @@ class Router
      *
      * @param string $uri
      */
-    public function registerMiddleware(string $uri): void
+    public function runMiddleware(string $uri): void
     {
         if (
             array_key_exists($uri, $this->middleware)
@@ -392,9 +387,14 @@ class Router
             foreach ($this->middleware[$uri][Request::method()] as $middleware) {
                 try {
                     $this->container->get($middleware);
-                } catch (Exception $e) {
+                } catch (NotFoundException $e) {
                     $this->logger->warning(
-                        'Failed to get middleware.',
+                        'Middleware not found.',
+                        ['exception' => $e->getMessage()]
+                    );
+                } catch (ContainerException $e) {
+                    $this->logger->warning(
+                        'Container exception occurred while getting middleware.',
                         ['exception' => $e->getMessage()]
                     );
                 }
