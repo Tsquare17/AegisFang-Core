@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
 {
-    protected $container;
+    protected Container $container;
 
     public function setUp(): void
     {

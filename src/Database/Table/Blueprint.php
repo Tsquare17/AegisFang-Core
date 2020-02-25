@@ -37,6 +37,19 @@ class Blueprint
         return $this;
     }
 
+    public function unique(): self
+    {
+        end($this->columns);
+
+        $key = key($this->columns);
+
+        $this->columns[$key] = [$this->columns[$key][0] . ' UNIQUE'];
+
+        reset($this->columns);
+
+        return $this;
+    }
+
     /**
      * @param $column
      * @param bool $unsigned

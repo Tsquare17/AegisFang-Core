@@ -59,7 +59,7 @@ class Query
     public function select($columns = '*'): self
     {
         $this->command = self::SELECT;
-        $this->statement[] = self::SELECT . $columns . self::EOL;
+        $this->statement[] = self::SELECT . $columns . ' ';
         $this->last = self::SELECT;
 
         return $this;
@@ -100,7 +100,7 @@ class Query
      */
     public function from(string $table): self
     {
-        $this->statement[] = self::FROM . $table . self::EOL;
+        $this->statement[] = self::FROM . $table . ' ';
         $this->last = self::FROM;
 
         return $this;
@@ -114,12 +114,12 @@ class Query
     public function where($column): self
     {
         if ($this->last === self::WHERE) {
-            $this->statement[] = self::AND . $column . self::EOL;
+            $this->statement[] = self::AND . $column . ' ';
             $this->last = self::WHERE;
 
             return $this;
         }
-        $this->statement[] = self::WHERE . $column . self::EOL;
+        $this->statement[] = self::WHERE . $column . ' ';
         $this->last = self::WHERE;
 
         return $this;

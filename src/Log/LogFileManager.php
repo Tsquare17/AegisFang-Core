@@ -35,7 +35,11 @@ class LogFileManager
      */
     public function getPathToLog(): string
     {
-        return $_SERVER['DOCUMENT_ROOT'] . '/../var/log/' . $this->getLogFileName();
+        $logPath = ($_SERVER['DOCUMENT_ROOT'] === '')
+        ? $_SERVER['PWD'] . '/var/log/'
+        : $_SERVER['DOCUMENT_ROOT'] . '/../var/log/';
+
+        return $logPath . $this->getLogFileName();
     }
 
     /**

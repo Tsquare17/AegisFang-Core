@@ -2,14 +2,16 @@
 
 namespace AegisFang\Auth;
 
-use AegisFang\Auth\Exceptions\AuthException;
+use AegisFang\Http\Error\Forbidden;
+use AegisFang\Http\Redirect;
 
 class AuthGuard
 {
     public function __construct(Auth $auth)
     {
         if (!Auth::check()) {
-            // TODO: Redirect to 403
+            $response = new Forbidden();
+            $response->send();
         }
     }
 }

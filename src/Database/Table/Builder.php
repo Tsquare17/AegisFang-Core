@@ -4,6 +4,7 @@ namespace AegisFang\Database\Table;
 
 use AegisFang\Database\Connection;
 use AegisFang\Database\Query;
+use AegisFang\Log\Logger;
 use PDO;
 use PDOException;
 
@@ -47,7 +48,7 @@ class Builder
         if ($this->tableExists()) {
             return false;
         }
-        $this->statement = self::CREATETABLE . " `{$this->table}` (\r\n";
+        $this->statement = self::CREATETABLE . " `{$this->table}` (";
         $this->setColumns();
         $this->closeTable();
 
@@ -72,7 +73,7 @@ class Builder
     {
         $i = 0;
         $len = count($this->columns);
-        $this->statement .= "{$this->id} " . self::PRIMARYKEY . ",\r\n";
+        $this->statement .= "{$this->id} " . self::PRIMARYKEY . ', ';
         foreach ($this->columns as $column => $options) {
             $this->statement .= "{$column} ";
             foreach ($options as $option) {
@@ -80,7 +81,7 @@ class Builder
             }
 
             if ($i !== $len - 1) {
-                $this->statement .= ",\r\n";
+                $this->statement .= ', ';
             }
             $i++;
         }
@@ -91,7 +92,7 @@ class Builder
      */
     public function closeTable(): void
     {
-        $this->statement .= "\r\n)";
+        $this->statement .= ')';
     }
 
     /**
@@ -123,6 +124,13 @@ class Builder
     public function execute(): bool
     {
         $statement = $this->pdo->prepare($this->statement);
+
+        $logger = Logger::getLogger();
+        $logger->debug(
+            'Last query',
+            ['Query' => $statement]
+        );
+
         try {
             $result = $statement->execute();
         } catch (PDOException $e) {
