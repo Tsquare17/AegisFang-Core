@@ -8,7 +8,6 @@ use AegisFang\Database\Table\Builder;
 abstract class Migration
 {
     protected string $tableName;
-    protected Blueprint $blueprint;
 
     /**
      * Migration constructor.

@@ -60,8 +60,8 @@ class Builder
         $query = new Query();
         $query->select('*')
             ->from('information_schema.tables')
-            ->where("table_schema = '{$this->dbName}'")
-            ->where("table_name = '{$this->table}'")
+            ->where('table_schema', $this->dbName)
+            ->where('table_name', $this->table)
             ->limit(1);
         return (bool) $query->execute();
     }

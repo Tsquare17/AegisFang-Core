@@ -220,6 +220,9 @@ class Router
      * @param string|null $uri
      *
      * @return Router
+     * @throws ContainerException
+     * @throws NotFoundException
+     * @throws \ReflectionException
      */
     public function direct(Container $container, string $uri = null): self
     {

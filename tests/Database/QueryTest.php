@@ -42,7 +42,7 @@ class QueryTest extends TestCase
     {
         $row = $this->query->select()
             ->from('test_table')
-            ->where('test_int = 2')
+            ->where('test_int', 2)
             ->execute();
 
         $expected = [

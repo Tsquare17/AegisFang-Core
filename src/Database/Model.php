@@ -19,4 +19,13 @@ class Model
 
         return Strings::pascalToSnake(end($class));
     }
+
+    public function findById($id): array
+    {
+        $query = new Query();
+        $query->select()
+            ->from($this->getTable())
+            ->where(Strings::getSingular($this->getTable()) . '_id', $id);
+        return $query->execute();
+    }
 }

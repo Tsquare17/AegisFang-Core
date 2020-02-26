@@ -32,10 +32,8 @@ class Connection
         } catch (PDOException $e) {
             $logger = Logger::getLogger();
             $logger->critical(
-                'Database connection failed.',
-                ['Exception' => $e->getMessage(), 'Line' => $e->getLine()]
+                $e->getMessage()
             );
-            die('Database connection failed');
         }
     }
 

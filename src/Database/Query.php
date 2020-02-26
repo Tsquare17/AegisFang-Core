@@ -2,6 +2,7 @@
 
 namespace AegisFang\Database;
 
+use AegisFang\Log\Logger;
 use PDO;
 
 /**
@@ -12,6 +13,7 @@ class Query
 {
     protected PDO $pdo;
     protected string $table;
+    protected int $fetchMode;
     protected string $command;
     protected string $columns;
     protected array $values;
@@ -58,6 +60,8 @@ class Query
      */
     public function select($columns = '*'): self
     {
+        $columns = $this->formatColumn($columns);
+
         $this->command = self::SELECT;
         $this->statement[] = self::SELECT . $columns . ' ';
         $this->last = self::SELECT;
@@ -109,17 +113,19 @@ class Query
     /**
      * @param $column
      *
+     * @param $value
+     *
      * @return $this
      */
-    public function where($column): self
+    public function where($column, $value): self
     {
         if ($this->last === self::WHERE) {
-            $this->statement[] = self::AND . $column . ' ';
+            $this->statement[] = self::AND . $column . ' = \'' . $value . '\' ';
             $this->last = self::WHERE;
 
             return $this;
         }
-        $this->statement[] = self::WHERE . $column . ' ';
+        $this->statement[] = self::WHERE . $column . ' = \'' . $value . '\' ';
         $this->last = self::WHERE;
 
         return $this;
@@ -154,6 +160,11 @@ class Query
     {
         $insert = "{$this->command} `{$this->table}` {$this->columns}" . self::VALUES . $this->getValuePlaceholders();
 
+        $logger = Logger::getLogger();
+        $logger->debug(
+            'Last query: ' . $insert,
+        );
+
         return $this->pdo->prepare($insert)->execute($this->values);
     }
 
@@ -182,9 +193,52 @@ class Query
      */
     public function runSelect()
     {
-        $this->statement[] = ';';
         $query = $this->pdo->query(implode($this->statement));
 
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $logger = Logger::getLogger();
+        $logger->debug(
+            'Last query: ' . $query->queryString,
+        );
+
+        $query->setFetchMode($this->getFetchMode());
+
+        return $query->fetchAll();
+    }
+
+    /**
+     * Surround columns with backticks, if missing.
+     *
+     * @param string $column
+     *
+     * @return string
+     */
+    protected function formatColumn(string $column): string
+    {
+        $set = explode('.', $column);
+
+        if (!is_array($set)) {
+            return $column;
+        }
+
+        $formatted = '';
+        foreach ($set as $col) {
+            if (!strpos($col, '`')) {
+                $formatted .= '`' . $col . '`';
+            } else {
+                $formatted .= $col;
+            }
+        }
+
+        return $formatted;
+    }
+
+    public function setFetchMode(int $fetchMode): self
+    {
+        $this->fetchMode = $fetchMode;
+    }
+
+    public function getFetchMode(): int
+    {
+        return $this->fetchMode ?? PDO::FETCH_ASSOC;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace AegisFang;
 
-use AegisFang\Log\Logger;
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
