@@ -10,12 +10,10 @@ use AegisFang\Utils\Strings;
 
 class MakeMigration extends Make
 {
-    protected Container $container;
     protected string $stubsPath;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->stubsPath = dirname(__DIR__) . '/Make/stubs';
         parent::__construct('migration', 'Generate a migration.');
     }
@@ -27,7 +25,7 @@ class MakeMigration extends Make
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $migrationsPath = $this->container->getBasePath() . 'database/migrations/';
+        $migrationsPath = getcwd() . '/database/migrations/';
 
         $name = $input->getArgument('name');
         $migrationFileName = 'create_' . $name . '_table.php';

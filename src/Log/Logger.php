@@ -118,8 +118,14 @@ abstract class Logger implements LoggerInterface
      */
     public static function getLogger(): Logger
     {
-        $config = require getenv('APP_CONFIG');
+        $configPath = getenv('APP_CONFIG');
 
-        return new $config['logger']();
+        if (file_exists($configPath)) {
+            $config = require $configPath;
+
+            return new $config['logger']();
+        }
+
+        return new LogToFile();
     }
 }

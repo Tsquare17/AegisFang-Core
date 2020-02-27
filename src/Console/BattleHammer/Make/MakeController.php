@@ -10,12 +10,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MakeController extends Make
 {
-    protected Container $container;
     protected string $stubsPath;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->stubsPath = dirname(__DIR__) . '/Make/stubs';
         parent::__construct('controller', 'Generate a controller.');
     }
@@ -28,7 +26,7 @@ class MakeController extends Make
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $controllersPath = $this->container->getBasePath() . 'app/controllers/';
+        $controllersPath = getcwd() . '/app/controllers/';
 
         $newControllerName = $input->getArgument('name');
         if (strpos(strrev($input->getArgument('name')), strrev('Controller')) !== 0) {

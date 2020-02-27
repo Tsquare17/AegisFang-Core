@@ -12,9 +12,8 @@ class MakeModel extends Make
     protected Container $container;
     protected string $stubsPath;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->stubsPath = dirname(__DIR__) . '/Make/stubs';
         parent::__construct('model', 'Generate a model.');
     }
@@ -26,7 +25,7 @@ class MakeModel extends Make
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $modelsPath = $this->container->getBasePath() . 'app/models/';
+        $modelsPath = getcwd() . '/app/models/';
 
         $model = $input->getArgument('name');
 

@@ -10,9 +10,8 @@ class KeyGen extends Auth
 {
     protected Container $container;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         parent::__construct('keygen', 'Generate the application key.');
     }
 
@@ -25,7 +24,7 @@ class KeyGen extends Auth
             return 1;
         }
 
-        $basePath = $this->container->getBasePath();
+        $basePath = getcwd() . '/';
         $env = file_get_contents($basePath . '.env');
 
         preg_match('/(^APP_KEY).*\\n+/m', $env, $match);

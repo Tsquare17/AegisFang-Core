@@ -14,9 +14,8 @@ class Migrate extends Command
 {
     protected Container $container;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->setDescription('Run an/all migration');
         parent::__construct('migrate');
     }
@@ -29,7 +28,7 @@ class Migrate extends Command
     // TODO: Add ability to run a single migration.
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $migrationsPath = $this->container->getBasePath() . 'database/migrations';
+        $migrationsPath = getcwd() . '/database/migrations';
         $files = array_diff(scandir($migrationsPath), array('.', '..'));
 
         foreach ($files as $file) {

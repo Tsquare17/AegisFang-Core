@@ -7,20 +7,20 @@ use AegisFang\Console\BattleHammer\Make\MakeController;
 use AegisFang\Console\BattleHammer\Make\MakeMigration;
 use AegisFang\Console\BattleHammer\Make\MakeModel;
 use AegisFang\Console\BattleHammer\Migrate\Migrate;
-use AegisFang\Container\Container;
+use AegisFang\Console\BattleHammer\Setup\Setup;
 use Symfony\Component\Console\Application;
 
 class App extends Application
 {
-    public function __construct(Container $container, $version)
+    public function __construct($version)
     {
         parent::__construct('AegisFang', $version);
 
-        $container->set('BattleHammer', $this);
-        $this->add(new MakeController($container));
-        $this->add(new MakeMigration($container));
-        $this->add(new MakeModel($container));
-        $this->add(new Migrate($container));
-        $this->add(new KeyGen($container));
+        $this->add(new MakeController());
+        $this->add(new MakeMigration());
+        $this->add(new MakeModel());
+        $this->add(new Migrate());
+        $this->add(new KeyGen());
+        $this->add(new Setup());
     }
 }
