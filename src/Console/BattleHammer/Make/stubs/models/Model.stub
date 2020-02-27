@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use AegisFang\Database\Model as BaseModel;
 
-class $:$
+class $:$ extends BaseModel
 {
     public function get$:n:$()
     {

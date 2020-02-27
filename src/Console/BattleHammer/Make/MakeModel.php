@@ -28,24 +28,24 @@ class MakeModel extends Make
     {
         $modelsPath = $this->container->getBasePath() . 'app/models/';
 
-        $newModelName = $model = $input->getArgument('name');
-        if (strpos(strrev($input->getArgument('name')), strrev('Model')) !== 0) {
-            $newModelName .= 'Model';
-        } else {
-            $model = str_replace('Model', '', $model);
-        }
+        $model = $input->getArgument('name');
+//        if (strpos(strrev($input->getArgument('name')), strrev('Model')) !== 0) {
+//            $newModelName .= 'Model';
+//        } else {
+//            $model = str_replace('Model', '', $model);
+//        }
 
-        $newFile = $modelsPath . $newModelName . '.php';
+        $newFile = $modelsPath . $model . '.php';
 
         if (file_exists($newFile)) {
-            $output->writeln("<error>File {$newModelName}.php already exists.</>");
+            $output->writeln("<error>File {$model}.php already exists.</>");
             return 0;
         }
 
         $stub = $this->getModelsStub();
 
         $step1 = $this->replaceName($stub, $model);
-        $replacedStub = $this->replaceStubPascalCase($step1, $newModelName);
+        $replacedStub = $this->replaceStubPascalCase($step1, $model);
 
         $write = file_put_contents($newFile, $replacedStub);
 
@@ -54,7 +54,7 @@ class MakeModel extends Make
             return 0;
         }
 
-        $output->writeln("<info>Created model {$newModelName}</>");
+        $output->writeln("<info>Created model {$model}</>");
 
         return 0;
     }
