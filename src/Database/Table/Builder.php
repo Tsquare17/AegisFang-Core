@@ -69,7 +69,7 @@ class Builder
             ->where('table_schema', $this->dbName)
             ->where('table_name', $this->table)
             ->limit(1);
-        return (bool) $query->execute();
+        return (bool) $query->execute()->fetch();
     }
 
     /**

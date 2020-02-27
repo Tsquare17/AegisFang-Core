@@ -26,6 +26,7 @@ class Model
         $query->select()
             ->from($this->getTable())
             ->where(Strings::getSingular($this->getTable()) . '_id', $id);
-        return $query->execute();
+
+        return $query->execute()->fetch();
     }
 }

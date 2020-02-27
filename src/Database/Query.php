@@ -208,7 +208,7 @@ class Query
 
         $query->setFetchMode($this->getFetchMode());
 
-        return $query->fetchAll();
+        return $query;
     }
 
     /**
