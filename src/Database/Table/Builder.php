@@ -32,7 +32,13 @@ class Builder
      */
     public function __construct($table, Blueprint $blueprint)
     {
-        $connection = new Connection();
+        $config = require getenv('APP_CONFIG');
+
+        /**
+         * @var Connection $connection
+         */
+        $connection = new $config['db_driver']();
+
         $this->pdo = $connection->get();
         $this->dbName = $connection->getName();
         $this->table = $table;

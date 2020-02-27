@@ -3,7 +3,6 @@
 namespace AegisFang\Auth;
 
 use AegisFang\Http\Error\Forbidden;
-use AegisFang\Http\Redirect;
 
 class AuthGuard
 {

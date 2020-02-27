@@ -118,11 +118,7 @@ abstract class Logger implements LoggerInterface
      */
     public static function getLogger(): Logger
     {
-        $configPath = ($_SERVER['DOCUMENT_ROOT'] === '')
-            ? $_SERVER['PWD'] . '/config/config.php'
-            : $_SERVER['DOCUMENT_ROOT'] . '/../config/config.php';
-
-        $config = require $configPath;
+        $config = require getenv('APP_CONFIG');
 
         return new $config['logger']();
     }

@@ -21,7 +21,6 @@ class RouterTest extends TestCase
 
     public function setUp(): void
     {
-        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../Fixtures/config';
         $this->router = Router::load(__DIR__ . '/../Fixtures/routes.php');
         $this->container = new Container();
     }

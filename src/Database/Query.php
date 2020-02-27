@@ -37,7 +37,13 @@ class Query
      */
     public function __construct()
     {
-        $connection = new Connection();
+        $config = require getenv('APP_CONFIG');
+
+        /**
+         * @var Connection $connection
+         */
+        $connection = new $config['db_driver']();
+
         $this->pdo = $connection->get();
     }
 

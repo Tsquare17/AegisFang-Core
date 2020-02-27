@@ -23,7 +23,8 @@ class QueryTest extends TestCase
         $table = new Builder('test_table', $blueprint);
         $table->createTable();
 
-        $this->conn = new Connection();
+        $config = require getenv('APP_CONFIG');
+        $this->conn = new $config['db_driver']();
         $this->query = $this->conn->query();
     }
 
