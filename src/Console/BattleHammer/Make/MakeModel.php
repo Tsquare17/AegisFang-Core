@@ -29,11 +29,6 @@ class MakeModel extends Make
         $modelsPath = $this->container->getBasePath() . 'app/models/';
 
         $model = $input->getArgument('name');
-//        if (strpos(strrev($input->getArgument('name')), strrev('Model')) !== 0) {
-//            $newModelName .= 'Model';
-//        } else {
-//            $model = str_replace('Model', '', $model);
-//        }
 
         $newFile = $modelsPath . $model . '.php';
 
