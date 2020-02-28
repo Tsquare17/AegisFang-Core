@@ -33,15 +33,29 @@ class Setup extends Command
         $env = file_get_contents($basePath . '.env');
 
         preg_match('/(^APP_PATH).*\\n+/m', $env, $match);
+        preg_match('/(^APP_CONFIG).*\\n+/m', $env, $configMatch);
+
+        $defaultConfig = 'APP_CONFIG=${APP_PATH}config/config.php';
 
         if (!empty($match)) {
             $new = str_replace($match[0], 'APP_PATH=' . $basePath . PHP_EOL, $env);
+            if (trim($configMatch[0]) !== $defaultConfig) {
+                $output->writeln(
+                    '<question>APP_CONFIG is not set to the default path. '
+                    . 'If this was not intentional, replace it with the default path: '
+                    . $defaultConfig . '</>'
+                );
+            }
+
             $success = file_put_contents($basePath . '.env', $new);
         } else {
-            // TODO: Make sure APP_CONFIG is set after APP_PATH.
+            $newEnv = file_get_contents($basePath . '.env');
+            $newEnv = str_replace($configMatch[0], '', $newEnv);
+            file_put_contents($basePath . '.env', $newEnv);
+
             $success = file_put_contents(
                 $basePath . '.env',
-                PHP_EOL . 'APP_PATH=' . $basePath,
+                PHP_EOL . 'APP_PATH=' . $basePath . "\r\n" . $configMatch[0],
                 FILE_APPEND
             );
         }
