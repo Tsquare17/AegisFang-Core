@@ -2,27 +2,41 @@
 
 namespace AegisFang\Console\BattleHammer\Make;
 
-use AegisFang\Container\Container;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeModel
+ * @package AegisFang\Console\BattleHammer\Make
+ */
 class MakeModel extends Make
 {
-    protected Container $container;
     protected string $stubsPath;
 
+    /**
+     * MakeModel constructor.
+     */
     public function __construct()
     {
         $this->stubsPath = dirname(__DIR__) . '/Make/stubs';
         parent::__construct('model', 'Generate a model.');
     }
 
+    /**
+     * Set arguments.
+     */
     public function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED);
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $modelsPath = getcwd() . '/app/models/';

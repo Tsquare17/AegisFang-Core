@@ -2,7 +2,6 @@
 
 namespace AegisFang\Console\BattleHammer\Migrate;
 
-use AegisFang\Container\Container;
 use AegisFang\Database\Table\Blueprint;
 use AegisFang\Database\Table\Builder;
 use Symfony\Component\Console\Command\Command;
@@ -10,24 +9,39 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class Migrate
+ * @package AegisFang\Console\BattleHammer\Migrate
+ */
 class Migrate extends Command
 {
-    protected Container $container;
-
+    /**
+     * Migrate constructor.
+     */
     public function __construct()
     {
         $this->setDescription('Run an/all migration');
         parent::__construct('migrate');
     }
 
+    /**
+     * Set arguments.
+     */
     public function configure(): void
     {
         $this->addArgument('migration file', InputArgument::OPTIONAL);
     }
 
-    // TODO: Add ability to run a single migration.
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        // TODO: Add ability to run a single migration.
+
         $migrationsPath = getcwd() . '/database/migrations';
         $files = array_diff(scandir($migrationsPath), array('.', '..'));
 

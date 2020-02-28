@@ -2,10 +2,14 @@
 
 namespace AegisFang\Http;
 
+/**
+ * Class JsonResponse
+ * @package AegisFang\Http
+ */
 class JsonResponse extends Response
 {
     /**
-     * Make
+     * Prepare the response.
      *
      * @param array $content
      * @param array $headers
@@ -28,6 +32,9 @@ class JsonResponse extends Response
         return $this;
     }
 
+    /**
+     * Send the response.
+     */
     public function send(): void
     {
         foreach ($this->headers() as $key => $value) {

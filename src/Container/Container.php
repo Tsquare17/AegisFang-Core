@@ -25,6 +25,9 @@ class Container implements ContainerInterface
 
     protected array $services = [];
 
+    /**
+     * Container constructor.
+     */
     public function __construct()
     {
         $this->logger = Logger::getLogger();

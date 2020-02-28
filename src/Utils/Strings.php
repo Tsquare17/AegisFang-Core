@@ -2,6 +2,10 @@
 
 namespace AegisFang\Utils;
 
+/**
+ * Class Strings
+ * @package AegisFang\Utils
+ */
 class Strings
 {
     /**

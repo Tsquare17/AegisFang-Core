@@ -10,7 +10,6 @@ use AegisFang\Log\Logger;
 use Closure;
 use Exception;
 use AegisFang\Container\Exceptions\ContainerException;
-use RuntimeException;
 
 /**
  * Class Router
@@ -300,6 +299,12 @@ class Router
         }
     }
 
+    /**
+     * @param $class
+     * @param $method
+     *
+     * @return mixed
+     */
     protected function callMethod($class, $method)
     {
         try {

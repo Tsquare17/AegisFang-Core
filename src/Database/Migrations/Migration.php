@@ -5,6 +5,10 @@ namespace AegisFang\Database\Migrations;
 use AegisFang\Database\Table\Blueprint;
 use AegisFang\Database\Table\Builder;
 
+/**
+ * Class Migration
+ * @package AegisFang\Database\Migrations
+ */
 abstract class Migration
 {
     protected string $tableName;

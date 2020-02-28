@@ -5,7 +5,7 @@ namespace AegisFang\Database;
 use PDO;
 
 /**
- * Class Connection
+ * Interface Connection
  * @package AegisFang\Database
  */
 interface Connection

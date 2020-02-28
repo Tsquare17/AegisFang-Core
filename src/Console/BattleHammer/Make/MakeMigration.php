@@ -2,12 +2,15 @@
 
 namespace AegisFang\Console\BattleHammer\Make;
 
-use AegisFang\Container\Container;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AegisFang\Utils\Strings;
 
+/**
+ * Class MakeMigration
+ * @package AegisFang\Console\BattleHammer\Make
+ */
 class MakeMigration extends Make
 {
     protected string $stubsPath;

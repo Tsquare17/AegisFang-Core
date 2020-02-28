@@ -4,6 +4,10 @@ namespace AegisFang\Log;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Logger
+ * @package AegisFang\Log
+ */
 abstract class Logger implements LoggerInterface
 {
     /**

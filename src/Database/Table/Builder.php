@@ -69,6 +69,7 @@ class Builder
             ->where('table_schema', $this->dbName)
             ->where('table_name', $this->table)
             ->limit(1);
+
         return (bool) $query->execute()->fetch();
     }
 
@@ -131,14 +132,13 @@ class Builder
     {
         $statement = $this->pdo->prepare($this->statement);
 
-        $logger = Logger::getLogger();
-        $logger->debug(
+        Logger::getLogger()->debug(
             'Last query',
             ['Query' => $statement]
         );
 
         try {
-            $result = $statement->execute();
+            $statement->execute();
         } catch (PDOException $e) {
             return false;
         }

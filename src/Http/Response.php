@@ -2,6 +2,10 @@
 
 namespace AegisFang\Http;
 
+/**
+ * Class Response
+ * @package AegisFang\Http
+ */
 class Response
 {
     use ResponseTrait;

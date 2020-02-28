@@ -6,14 +6,27 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class Setup
+ * @package AegisFang\Console\BattleHammer\Setup
+ */
 class Setup extends Command
 {
+    /**
+     * Setup constructor.
+     */
     public function __construct()
     {
         $this->setDescription('Application Setup.');
         parent::__construct('setup');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $basePath = getcwd() . '/';

@@ -18,26 +18,39 @@ class Application extends Container
 
     protected Dotenv $config;
 
-
+    /**
+     * Application constructor.
+     *
+     * @param string|null $basePath
+     */
     public function __construct(string $basePath = null)
     {
-        $this->basePath = $basePath ?: $this->setBasePath();
+        $this->basePath = $basePath ?: $this->defaultBasePath();
 
         $this->registerBindings();
 
         parent::__construct();
     }
 
-    public function setBasePath(): string
+    /**
+     * @return string
+     */
+    public function defaultBasePath(): string
     {
         return dirname(__DIR__, 3) . '/';
     }
 
+    /**
+     * @return string
+     */
     public function getBasePath(): string
     {
         return $this->basePath;
     }
 
+    /**
+     * Set container instance and load env config.
+     */
     public function registerBindings(): void
     {
         static::setInstance($this);

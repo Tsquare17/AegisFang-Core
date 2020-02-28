@@ -37,6 +37,9 @@ class Blueprint
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function unique(): self
     {
         end($this->columns);

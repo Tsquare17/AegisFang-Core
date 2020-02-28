@@ -4,10 +4,17 @@ namespace AegisFang\Log;
 
 use Monolog\Formatter\LineFormatter;
 
+/**
+ * Class LogFileManager
+ * @package AegisFang\Log
+ */
 class LogFileManager
 {
     protected LineFormatter $formatter;
 
+    /**
+     * LogFileManager constructor.
+     */
     public function __construct()
     {
         $this->formatter = new LineFormatter(

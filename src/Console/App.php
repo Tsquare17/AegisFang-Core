@@ -10,6 +10,10 @@ use AegisFang\Console\BattleHammer\Migrate\Migrate;
 use AegisFang\Console\BattleHammer\Setup\Setup;
 use Symfony\Component\Console\Application;
 
+/**
+ * Class App
+ * @package AegisFang\Console
+ */
 class App extends Application
 {
     public function __construct($version)

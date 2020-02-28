@@ -149,6 +149,9 @@ class Query
         return $this;
     }
 
+    /**
+     * @return bool|mixed
+     */
     public function execute()
     {
         if ($this->command === self::SELECT) {
@@ -162,12 +165,14 @@ class Query
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function runInsert(): bool
     {
         $insert = "{$this->command} `{$this->table}` {$this->columns}" . self::VALUES . $this->getValuePlaceholders();
 
-        $logger = Logger::getLogger();
-        $logger->debug(
+        Logger::getLogger()->debug(
             'Last query: ' . $insert,
         );
 
@@ -179,7 +184,7 @@ class Query
      *
      * @return string
      */
-    private function getValuePlaceholders()
+    private function getValuePlaceholders(): string
     {
         $values = '(';
         $count = count($this->values);
@@ -201,8 +206,7 @@ class Query
     {
         $query = $this->pdo->query(implode($this->statement));
 
-        $logger = Logger::getLogger();
-        $logger->debug(
+        Logger::getLogger()->debug(
             'Last query: ' . $query->queryString,
         );
 
@@ -238,11 +242,21 @@ class Query
         return $formatted;
     }
 
+    /**
+     * @param int $fetchMode
+     *
+     * @return $this
+     */
     public function setFetchMode(int $fetchMode): self
     {
         $this->fetchMode = $fetchMode;
+
+        return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getFetchMode(): int
     {
         return $this->fetchMode ?? PDO::FETCH_ASSOC;

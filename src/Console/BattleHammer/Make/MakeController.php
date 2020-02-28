@@ -2,28 +2,43 @@
 
 namespace AegisFang\Console\BattleHammer\Make;
 
-use AegisFang\Container\Container;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class MakeController
+ * @package AegisFang\Console\BattleHammer\Make
+ */
 class MakeController extends Make
 {
     protected string $stubsPath;
 
+    /**
+     * MakeController constructor.
+     */
     public function __construct()
     {
         $this->stubsPath = dirname(__DIR__) . '/Make/stubs';
         parent::__construct('controller', 'Generate a controller.');
     }
 
+    /**
+     * Set arguments.
+     */
     public function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED, 'Name of the controller.');
         $this->addOption('restful', 'r', InputOption::VALUE_NONE, 'Create RESTFul controller.');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $controllersPath = getcwd() . '/app/controllers/';

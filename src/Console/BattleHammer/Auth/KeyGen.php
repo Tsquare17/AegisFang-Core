@@ -2,19 +2,25 @@
 
 namespace AegisFang\Console\BattleHammer\Auth;
 
-use AegisFang\Container\Container;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class KeyGen extends Auth
 {
-    protected Container $container;
-
+    /**
+     * KeyGen constructor.
+     */
     public function __construct()
     {
         parent::__construct('keygen', 'Generate the application key.');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         try {

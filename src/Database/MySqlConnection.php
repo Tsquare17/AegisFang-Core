@@ -6,6 +6,10 @@ use AegisFang\Log\Logger;
 use PDO;
 use PDOException;
 
+/**
+ * Class MySqlConnection
+ * @package AegisFang\Database
+ */
 class MySqlConnection implements Connection
 {
     protected PDO $pdo;
@@ -26,8 +30,7 @@ class MySqlConnection implements Connection
                 $options
             );
         } catch (PDOException $e) {
-            $logger = Logger::getLogger();
-            $logger->critical(
+            Logger::getLogger()->critical(
                 $e->getMessage()
             );
         }

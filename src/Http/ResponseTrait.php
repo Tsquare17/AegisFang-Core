@@ -2,6 +2,10 @@
 
 namespace AegisFang\Http;
 
+/**
+ * Trait ResponseTrait
+ * @package AegisFang\Http
+ */
 trait ResponseTrait
 {
     /*

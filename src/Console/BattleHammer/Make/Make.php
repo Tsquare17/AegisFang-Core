@@ -4,8 +4,18 @@ namespace AegisFang\Console\BattleHammer\Make;
 
 use Symfony\Component\Console\Command\Command;
 
+/**
+ * Class Make
+ * @package AegisFang\Console\BattleHammer\Make
+ */
 abstract class Make extends Command
 {
+    /**
+     * Make constructor.
+     *
+     * @param $name
+     * @param $description
+     */
     public function __construct($name, $description)
     {
         $this->setDescription($description);

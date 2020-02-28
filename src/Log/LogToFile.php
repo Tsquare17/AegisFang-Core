@@ -6,12 +6,21 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger as Monolog;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class LogToFile
+ * @package AegisFang\Log
+ */
 class LogToFile extends Logger
 {
     protected LogFileManager $logFileManager;
 
     protected string $logChannel;
 
+    /**
+     * LogToFile constructor.
+     *
+     * @param string $logChannel
+     */
     public function __construct(string $logChannel = 'AegisFang')
     {
         $this->logFileManager = new LogFileManager();
@@ -79,8 +88,12 @@ class LogToFile extends Logger
         return $this->getLogLevel($applicationLogLevel) <= $this->getLogLevel(strtoupper($level));
     }
 
+    /**
+     * @return int
+     */
     protected function getMaxFiles(): int
     {
-        return 10;
+        $max = (int) getenv('APP_LOG_MAX_FILES');
+        return $max ?? 10;
     }
 }
