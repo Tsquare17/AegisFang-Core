@@ -34,9 +34,13 @@ class Auth
      */
     public function register($name, $email, $pass): bool
     {
+        $hashingAlgorithm = getenv('hashing_algorithm') ?: PASSWORD_BCRYPT;
+
+        $hashedPass = password_hash($pass, $hashingAlgorithm);
+
         return $this->query->insert(
             ['user_name', 'user_email', 'user_password'],
-            [$name, $email, $pass]
+            [$name, $email, $hashedPass]
         )->into('users')
          ->execute();
     }
@@ -64,10 +68,24 @@ class Auth
     /**
      * Check authentication.
      *
+     * @param $userName
+     * @param $password
+     *
      * @return bool
      */
-    public static function check(): bool
+    public static function check($userName, $password): bool
     {
+        $query = new Query();
+        $user = $query->select('*')
+            ->from('users')
+            ->where('user_name', $userName)
+            ->execute()
+            ->fetch();
+
+        if (password_verify($password, $user['user_password'])) {
+            return true;
+        }
+
         return false;
     }
 }
