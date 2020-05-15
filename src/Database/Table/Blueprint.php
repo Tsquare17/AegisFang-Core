@@ -120,6 +120,7 @@ class Blueprint
      */
     public function foreign($id): self
     {
+        // Maybe just get rid of this.
     }
 
     /**
@@ -129,6 +130,14 @@ class Blueprint
      */
     public function references($id): self
     {
+        // Set foreign key on last registered column, referencing $id.
+    }
+
+    /**
+     * @return $this
+     */
+    public function on(): self
+    {
     }
 
     /**
@@ -136,7 +145,7 @@ class Blueprint
      *
      * @return $this
      */
-    public function on($id): self
+    public function onUpdate($id): self
     {
     }
 

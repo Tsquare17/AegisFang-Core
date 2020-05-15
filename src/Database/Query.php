@@ -12,6 +12,8 @@ use PDO;
 class Query
 {
     protected PDO $pdo;
+    protected Connection $connection;
+    protected string $lastStatement;
     protected string $table;
     protected int $fetchMode;
     protected string $command;
@@ -42,9 +44,9 @@ class Query
         /**
          * @var Connection $connection
          */
-        $connection = new $config['db_driver']();
+        $this->connection = new $config['db_driver']();
 
-        $this->pdo = $connection->get();
+        $this->pdo = $this->connection->get();
     }
 
     /**
@@ -210,6 +212,8 @@ class Query
             'Last query: ' . $query->queryString,
         );
 
+        $this->lastStatement = $query->queryString;
+
         $query->setFetchMode($this->getFetchMode());
 
         return $query;
@@ -260,5 +264,15 @@ class Query
     public function getFetchMode(): int
     {
         return $this->fetchMode ?? PDO::FETCH_ASSOC;
+    }
+
+    /**
+     * Get the DB connection instance.
+     *
+     * @return Connection
+     */
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 }
