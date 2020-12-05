@@ -4,3 +4,5 @@ composer.lock
 .php_cs.cache
 .phpunit.result.cache
 tests/Fixtures/var/*
+var/log/*
+!var/log/.gitkeep

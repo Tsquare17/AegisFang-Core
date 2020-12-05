@@ -1,0 +1,38 @@
+os: linux
+dist: trusty
+
+language: php
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+jobs:
+  include:
+    - php: 8.0
+    - php: 7.4
+    - php: 7.3
+    - php: 7.2
+    - php: 7.1
+
+before_script:
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+install:
+  - composer install
+
+env:
+  - SMTP=false
+
+script:
+  - composer test-no-db
+  - composer sniff
