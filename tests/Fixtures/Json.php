@@ -6,7 +6,7 @@ use AegisFang\Router\JsonController;
 
 class Json extends JsonController
 {
-    public function index(): void
+    public function index()
     {
         $data = [
             'names' => [
@@ -16,14 +16,14 @@ class Json extends JsonController
             ]
         ];
 
-        $this->send(
+        return $this->dispatch(
             $data
         );
     }
 
-    public function getUrlParam($id, $name): void
+    public function getUrlParam($id, $name)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $id => $name,
             ]

@@ -37,7 +37,7 @@ class ControllerTest extends TestCase
             '/' => '\AegisFang\Tests\Fixtures\Json::index'
         ]);
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode($data));
     }

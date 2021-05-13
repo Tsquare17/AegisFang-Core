@@ -4,12 +4,13 @@ namespace AegisFang\Router;
 
 use AegisFang\Container\Container;
 use AegisFang\Container\Exceptions\NotFoundException;
+use AegisFang\Container\Exceptions\ContainerException;
 use AegisFang\Http\Request;
 use AegisFang\Http\Error\NotFound;
 use AegisFang\Log\Logger;
 use Closure;
 use Exception;
-use AegisFang\Container\Exceptions\ContainerException;
+use ReflectionException;
 
 /**
  * Class Router
@@ -41,8 +42,11 @@ class Router
     public static function load(string $file): Router
     {
         $route = new static();
+
         $route->logger = Logger::getLogger();
+
         require $file;
+
         return $route;
     }
 
@@ -218,12 +222,11 @@ class Router
      *
      * @param string|null $uri
      *
-     * @return Router
      * @throws ContainerException
      * @throws NotFoundException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function direct(Container $container, string $uri = null): self
+    public function direct(Container $container, string $uri = null)
     {
         $this->container = $container;
 
@@ -242,15 +245,11 @@ class Router
                 &&
                 $this->routes[$uri][Request::method()] instanceof Closure
             ) {
-                $this->content = $this->container->injectClosure($this->routes[$uri][Request::method()]);
-
-                return $this;
+                return $this->container->injectClosure($this->routes[$uri][Request::method()]);
             }
 
             if (isset($this->routes[$uri][Request::method()])) {
-                $this->content = $this->callClass($uri);
-
-                return $this;
+                return $this->callClass($uri);
             }
         }
 
@@ -262,17 +261,8 @@ class Router
         );
 
         $response = new NotFound();
-        $response->send();
 
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
+        return $response->send();
     }
 
     /**

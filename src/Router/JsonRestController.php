@@ -32,15 +32,15 @@ class JsonRestController extends JsonController
      *
      * @param mixed ...$args
      */
-    public function send(...$args): void
+    public function dispatch(...$args)
     {
         $args = $this->unsetGuarded($args);
 
-        $this->response->make(
+        return $this->response->make(
             [
                 'routes' => $this->router->getRoutes(),
                 'data' => $args
             ]
-        )->send();
+        )->dispatch();
     }
 }

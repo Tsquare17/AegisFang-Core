@@ -64,6 +64,8 @@ class ContainerTest extends TestCase
             }
         ]);
 
-        $this->assertEquals('baz', $router->direct($this->container, '/')->getContent());
+        echo $router->direct($this->container, '/');
+
+        $this->expectOutputString('baz');
     }
 }

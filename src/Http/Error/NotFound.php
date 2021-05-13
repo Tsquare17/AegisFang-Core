@@ -22,8 +22,8 @@ class NotFound extends Response
     /**
      * Send the response.
      */
-    public function send(): void
+    public function send()
     {
-        echo $this->body();
+        return $this->body();
     }
 }

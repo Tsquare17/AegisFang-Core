@@ -60,7 +60,9 @@ class RouterTest extends TestCase
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $this->assertEquals('test', $this->router->direct($this->container, '/')->getContent());
+        echo $this->router->direct($this->container, '/');
+
+        $this->expectOutputString('test');
     }
 
     /** @test */
@@ -72,7 +74,9 @@ class RouterTest extends TestCase
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $this->assertEquals('baz', $this->router->direct($this->container, '/')->getContent());
+        echo $this->router->direct($this->container, '/');
+
+        $this->expectOutputString('baz');
     }
 
     /** @test */
@@ -84,7 +88,9 @@ class RouterTest extends TestCase
             }
         ]);
 
-        $this->assertEquals('test', $this->router->direct($this->container, '/wildcard')->getContent());
+        echo $this->router->direct($this->container, '/wildcard');
+
+        $this->expectOutputString('test');
     }
 
     /**
@@ -103,7 +109,7 @@ class RouterTest extends TestCase
             'name' => 'tom',
         ];
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             '3' => 'tom',
@@ -126,7 +132,7 @@ class RouterTest extends TestCase
             'name' => 'ted',
         ];
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             '5' => 'ted'
@@ -145,7 +151,7 @@ class RouterTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['data'] = 'datum';
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             'datum'
@@ -164,7 +170,7 @@ class RouterTest extends TestCase
         $_POST['REQUEST_METHOD_OVERRIDE'] = 'PUT';
         $_POST['data'] = 'update datum';
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             'update datum'
@@ -183,7 +189,7 @@ class RouterTest extends TestCase
         $_POST['REQUEST_METHOD_OVERRIDE'] = 'DELETE';
         $_POST['data'] = 'delete datum';
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             'delete datum'
@@ -202,7 +208,7 @@ class RouterTest extends TestCase
         $_POST['REQUEST_METHOD_OVERRIDE'] = 'OPTIONS';
         $_POST['data'] = 'option';
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode([
             'option'
@@ -222,7 +228,7 @@ class RouterTest extends TestCase
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString('middleware first controller second');
     }
@@ -240,7 +246,7 @@ class RouterTest extends TestCase
             ]
         )->middleware(Middleware::class);
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString('Not Found');
     }
@@ -259,7 +265,7 @@ class RouterTest extends TestCase
         )->middleware(Middleware::class)
             ->middleware(SecondMiddleware::class);
 
-        $this->router->direct($this->container, '/');
+        echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString('middleware first second middleware controller last');
     }

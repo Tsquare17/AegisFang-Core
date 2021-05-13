@@ -6,54 +6,54 @@ use AegisFang\Router\JsonController;
 
 class Rest extends JsonController
 {
-    public function index(): void
+    public function index()
     {
-        $this->send(
+        return $this->dispatch(
             [
                 'index'
             ]
         );
     }
 
-    public function get($id, $name): void
+    public function get($id, $name)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $id => $name
             ]
         );
     }
 
-    public function post($data): void
+    public function post($data)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $data
             ]
         );
     }
 
-    public function put($data): void
+    public function put($data)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $data
             ]
         );
     }
 
-    public function delete($data): void
+    public function delete($data)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $data
             ]
         );
     }
 
-    public function options($data): void
+    public function options($data)
     {
-        $this->send(
+        return $this->dispatch(
             [
                 $data
             ]

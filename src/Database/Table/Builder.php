@@ -5,6 +5,7 @@ namespace AegisFang\Database\Table;
 use AegisFang\Database\Connection;
 use AegisFang\Database\Query;
 use AegisFang\Log\Logger;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -70,7 +71,11 @@ class Builder
             ->where('table_name', $this->table)
             ->limit(1);
 
-        return (bool) $query->execute()->fetch();
+        try {
+            return (bool) $query->execute()->fetch();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**

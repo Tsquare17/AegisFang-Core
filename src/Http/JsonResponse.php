@@ -35,7 +35,7 @@ class JsonResponse extends Response
     /**
      * Send the response.
      */
-    public function send(): void
+    public function dispatch(): string
     {
         foreach ($this->headers() as $key => $value) {
             header($key . ': ' . $value);
@@ -43,6 +43,6 @@ class JsonResponse extends Response
 
         http_response_code($this->status());
 
-        echo json_encode($this->body(), JSON_THROW_ON_ERROR, 512);
+        return json_encode($this->body(), JSON_THROW_ON_ERROR, 512);
     }
 }

@@ -236,7 +236,7 @@ class Query
 
         $formatted = '';
         foreach ($set as $col) {
-            if (!strpos($col, '`')) {
+            if (!strpos($col, '`') && $col !== '*') {
                 $formatted .= '`' . $col . '`';
             } else {
                 $formatted .= $col;

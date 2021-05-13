@@ -2,6 +2,8 @@
 
 namespace AegisFang;
 
+use AegisFang\Container\Exceptions\ContainerException;
+use AegisFang\Container\Exceptions\NotFoundException;
 use Dotenv\Dotenv;
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
@@ -68,6 +70,10 @@ class Application extends Container
         $router = Router::load('../config/routes.php');
         $this->set(Router::class, $router);
 
-        $router->direct($this);
+        try {
+            echo $router->direct($this);
+        } catch (NotFoundException $e) {
+            echo $e->getMessage();
+        }
     }
 }
