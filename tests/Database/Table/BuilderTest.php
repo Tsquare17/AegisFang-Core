@@ -38,6 +38,26 @@ class BuilderTest extends TestCase
     }
 
     /** @test */
+    public function can_create_table_with_relationship(): void
+    {
+        $blueprint = new Blueprint();
+        $blueprint->int('foo_id');
+        $table = new Builder('foo', $blueprint);
+        $table->createTable();
+
+        $blueprint = new Blueprint();
+        $blueprint->int('foo_id')
+            ->references('foo_id')
+            ->on('foo');
+        $table = new Builder('bar', $blueprint);
+        $isCreated = $table->createTable();
+
+        // Need to check to see if the relationship actually exists.
+        // currently passes because builder doesn't try to create the relationship yet.
+        $this->assertTrue($isCreated);
+    }
+
+    /** @test */
     public function can_delete_table(): void
     {
         $isDestroyed = Builder::destroy('aegistest');

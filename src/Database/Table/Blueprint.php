@@ -139,6 +139,19 @@ class Blueprint
     public function references($id): self
     {
         // Set foreign key on last registered column, referencing $id.
+        end($this->columns);
+
+        $key = key($this->columns);
+
+        // Do I need the 0?
+        $this->relationships[] = [
+            $this->columns[$key][0],
+            $id,
+        ];
+
+        reset($this->columns);
+
+        return $this;
     }
 
     /**
@@ -146,8 +159,17 @@ class Blueprint
      *
      * @return $this
      */
-    public function on($table): self
+    public function on(string $table): self
     {
+        end($this->relationships);
+
+        $key = key($this->relationships);
+
+        $this->relationships[$key][] = $table;
+
+        reset($this->relationships);
+
+        return $this;
     }
 
     /**

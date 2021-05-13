@@ -59,6 +59,7 @@ class Builder
         $this->setColumns();
         $this->closeTable();
 
+        // TODO: check if there are any relationships to create.
         return $this->execute();
     }
 
