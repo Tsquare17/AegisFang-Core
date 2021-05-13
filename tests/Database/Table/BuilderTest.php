@@ -15,7 +15,23 @@ class BuilderTest extends TestCase
         $blueprint->id('test_id');
         $blueprint->string('testcol', 100);
         $blueprint->int('testint', true, true);
+        $blueprint->text('text_col');
         $table = new Builder('aegistest', $blueprint);
+        $isCreated = $table->createTable();
+
+        $this->assertTrue($isCreated);
+    }
+
+    /** @test */
+    public function can_create_table_with_all_integer_types(): void
+    {
+        $blueprint = new Blueprint();
+
+        $blueprint->tinyint('tiny_col');
+        $blueprint->int('int_col');
+        $blueprint->bigint('big_col');
+
+        $table = new Builder('int_test', $blueprint);
         $isCreated = $table->createTable();
 
         $this->assertTrue($isCreated);
@@ -27,5 +43,7 @@ class BuilderTest extends TestCase
         $isDestroyed = Builder::destroy('aegistest');
 
         $this->assertTrue($isDestroyed);
+
+        Builder::destroy('int_test');
     }
 }

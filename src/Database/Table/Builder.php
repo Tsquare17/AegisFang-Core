@@ -71,11 +71,7 @@ class Builder
             ->where('table_name', $this->table)
             ->limit(1);
 
-        try {
-            return (bool) $query->execute()->fetch();
-        } catch (Exception $e) {
-            return false;
-        }
+        return (bool) $query->execute()->fetch();
     }
 
     /**
@@ -142,11 +138,7 @@ class Builder
             ['Query' => $statement]
         );
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            return false;
-        }
+        $statement->execute();
 
         return true;
     }

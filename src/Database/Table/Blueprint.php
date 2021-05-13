@@ -26,13 +26,26 @@ class Blueprint
 
     /**
      * @param $column
-     * @param int $chars
+     * @param int $length
      *
      * @return $this
      */
-    public function string($column, $chars = 255): self
+    public function string($column, $length = 255): self
     {
-        $this->columns[$column] = ["VARCHAR({$chars})"];
+        $this->columns[$column] = ["VARCHAR({$length})"];
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param int $length
+     *
+     * @return $this
+     */
+    public function text($column, $length = 65535): self
+    {
+        $this->columns[$column] = ["TEXT({$length})"];
 
         return $this;
     }
@@ -55,55 +68,60 @@ class Blueprint
 
     /**
      * @param $column
+     * @param null|int $length
      * @param bool $unsigned
      * @param bool $notNull
      * @param bool $autoincrement
      *
      * @return $this
      */
-    public function tinyint($column, $unsigned = false, $notNull = false, $autoincrement = false): self
+    public function tinyint($column, $length = null, $unsigned = false, $notNull = false, $autoincrement = false): self
     {
-        return $this->intType('TINYINT', $column, $unsigned, $notNull, $autoincrement);
+        return $this->intType('TINYINT', $column, $length, $unsigned, $notNull, $autoincrement);
     }
 
     /**
      * @param $column
+     * @param null|int $length
      * @param bool $unsigned
      * @param bool $notNull
      * @param bool $autoincrement
      *
      * @return $this
      */
-    public function int($column, $unsigned = false, $notNull = false, $autoincrement = false): self
+    public function int($column, $length = null, $unsigned = false, $notNull = false, $autoincrement = false): self
     {
-        return $this->intType('INT', $column, $unsigned, $notNull, $autoincrement);
+        return $this->intType('INT', $column, $length, $unsigned, $notNull, $autoincrement);
     }
 
     /**
      * @param $column
+     * @param null|int $length
      * @param bool $unsigned
      * @param bool $notNull
      * @param bool $autoincrement
      *
      * @return $this
      */
-    public function bigint($column, $unsigned = false, $notNull = false, $autoincrement = false): self
+    public function bigint($column, $length = null, $unsigned = false, $notNull = false, $autoincrement = false): self
     {
-        return $this->intType('BIGINT', $column, $unsigned, $notNull, $autoincrement);
+        return $this->intType('BIGINT', $column, $length, $unsigned, $notNull, $autoincrement);
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param $column
-     * @param $unsigned
-     * @param $notNull
-     * @param $autoincrement
+     * @param null|int $length
+     * @param bool $unsigned
+     * @param bool $notNull
+     * @param bool $autoincrement
      *
      * @return $this
      */
-    public function intType($type, $column, $unsigned, $notNull, $autoincrement): self
+    public function intType($type, $column, $length, $unsigned, $notNull, $autoincrement): self
     {
         $value = $type;
+        $value = $length ? $value . '(' . $length . ')' : $value;
         $value = $unsigned ? $value . ' UNSIGNED' : $value;
         $value = $notNull ? $value . ' NOT NULL' : $value;
         $value = $autoincrement ? $value . ' AUTO_INCREMENT' : $value;
@@ -118,25 +136,17 @@ class Blueprint
      *
      * @return $this
      */
-    public function foreign($id): self
-    {
-        // Maybe just get rid of this.
-    }
-
-    /**
-     * @param $id
-     *
-     * @return $this
-     */
     public function references($id): self
     {
         // Set foreign key on last registered column, referencing $id.
     }
 
     /**
+     * @param string $table
+     *
      * @return $this
      */
-    public function on(): self
+    public function on($table): self
     {
     }
 
