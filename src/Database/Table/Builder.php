@@ -20,10 +20,14 @@ class Builder
     protected string $table;
     protected string $id;
     protected array $columns;
+    protected array $relationships;
     protected string $statement;
     protected const CREATETABLE = 'CREATE TABLE IF NOT EXISTS';
     protected const DROPTABLE = 'DROP TABLE';
     protected const PRIMARYKEY = 'INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT';
+    protected const CREATE_RELATIONSHIP = '    FOREIGN KEY (parent_id)
+        REFERENCES parent(id)
+        ON DELETE CASCADE';
 
     /**
      * Builder constructor.
@@ -45,6 +49,7 @@ class Builder
         $this->table = $table;
         $this->id = $blueprint->id ?: 'id';
         $this->columns = $blueprint->columns;
+        $this->relationships = $blueprint->relationships;
     }
 
     /**
@@ -55,12 +60,33 @@ class Builder
         if ($this->tableExists()) {
             return false;
         }
+
         $this->statement = self::CREATETABLE . " `{$this->table}` (";
         $this->setColumns();
         $this->closeTable();
 
-        // TODO: check if there are any relationships to create.
         return $this->execute();
+    }
+
+    public function createRelationships(): void
+    {
+        $i = 0;
+        foreach ($this->relationships as $relationship) {
+            $this->statement = 'ALTER TABLE ' . $relationship[2] . ' ADD';
+            $this->statement .= ' KEY ' .
+                                $relationship[0] . '_' . $relationship[1] . '_' . $i . '(' . $relationship[0] . ');';
+
+            $this->execute();
+
+            $i++;
+        }
+
+        foreach ($this->relationships as $relationship) {
+            $this->statement = 'ALTER TABLE ' . $this->table . ' ADD FOREIGN KEY(' . $relationship[0]
+                               . ') REFERENCES ' . $relationship[2] . '(' . $relationship[1] . ');';
+
+            $this->execute();
+        }
     }
 
     public function tableExists(): bool

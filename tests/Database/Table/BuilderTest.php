@@ -51,9 +51,10 @@ class BuilderTest extends TestCase
             ->on('foo');
         $table = new Builder('bar', $blueprint);
         $isCreated = $table->createTable();
+        $table->createRelationships();
 
         // Need to check to see if the relationship actually exists.
-        // currently passes because builder doesn't try to create the relationship yet.
+        // Need to set on update delete maybe. deleting table fails because of foreign key constraint
         $this->assertTrue($isCreated);
     }
 
@@ -65,5 +66,7 @@ class BuilderTest extends TestCase
         $this->assertTrue($isDestroyed);
 
         Builder::destroy('int_test');
+        Builder::destroy('bar');
+        Builder::destroy('foo');
     }
 }

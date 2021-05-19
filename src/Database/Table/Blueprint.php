@@ -143,9 +143,8 @@ class Blueprint
 
         $key = key($this->columns);
 
-        // Do I need the 0?
         $this->relationships[] = [
-            $this->columns[$key][0],
+            $key,
             $id,
         ];
 
