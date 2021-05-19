@@ -2,7 +2,7 @@
 
 namespace AegisFang\Tests\Fixtures;
 
-use AegisFang\Router\JsonController;
+use AegisFang\Controller\JsonController;
 
 class Rest extends JsonController
 {

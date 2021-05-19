@@ -1,6 +1,6 @@
 <?php
 
-namespace AegisFang\Router;
+namespace AegisFang\Controller;
 
 use AegisFang\Http\JsonResponse;
 use AegisFang\Http\Request;

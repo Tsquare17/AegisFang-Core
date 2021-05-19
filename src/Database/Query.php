@@ -41,9 +41,6 @@ class Query
     {
         $config = require getenv('APP_CONFIG');
 
-        /**
-         * @var Connection $connection
-         */
         $this->connection = new $config['db_driver']();
 
         $this->pdo = $this->connection->get();
@@ -106,7 +103,7 @@ class Query
     }
 
     /**
-     * @param $table
+     * @param string $table
      *
      * @return $this
      */
@@ -196,6 +193,7 @@ class Query
                 $values .= ',';
             }
         }
+
         $values .= ')';
 
         return $values;

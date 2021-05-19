@@ -1,9 +1,10 @@
 <?php
 
-namespace AegisFang\Router;
+namespace AegisFang\Controller;
 
 use AegisFang\Http\JsonResponse;
 use AegisFang\Http\Request;
+use AegisFang\Router\Router;
 
 /**
  * Class JsonRestController
