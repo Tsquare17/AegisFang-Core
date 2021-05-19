@@ -68,6 +68,9 @@ class Builder
         return $this->execute();
     }
 
+    /**
+     * Create foreign key relationships.
+     */
     public function createRelationships(): void
     {
         $i = 0;

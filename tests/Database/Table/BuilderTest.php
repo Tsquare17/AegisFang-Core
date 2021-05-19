@@ -53,8 +53,6 @@ class BuilderTest extends TestCase
         $isCreated = $table->createTable();
         $table->createRelationships();
 
-        // Need to check to see if the relationship actually exists.
-        // Need to set on update delete maybe. deleting table fails because of foreign key constraint
         $this->assertTrue($isCreated);
     }
 
