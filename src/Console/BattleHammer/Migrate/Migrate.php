@@ -45,7 +45,14 @@ class Migrate extends Command
         $migrationsPath = getcwd() . '/database/migrations';
         $files = array_diff(scandir($migrationsPath), array('.', '..'));
 
+        natsort($files);
+
         foreach ($files as $file) {
+            // TODO: remove the prefix from the file.
+            if (is_numeric($file[0])) {
+                $file = preg_replace('/^[0-9]+_/', '', $file);
+            }
+
             $className = $this->filenameSnakeToPascal($file);
             $tableName = $this->getTableName($file);
 

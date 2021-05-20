@@ -37,7 +37,11 @@ abstract class Migration
     {
         $table = new Builder($this->tableName, $this->table(new Blueprint()));
 
-        return $table->createTable();
+        $isCreated = $table->createTable();
+
+        $table->createRelationships();
+
+        return $isCreated;
     }
 
     /**

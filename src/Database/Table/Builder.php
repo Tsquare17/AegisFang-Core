@@ -25,9 +25,6 @@ class Builder
     protected const CREATETABLE = 'CREATE TABLE IF NOT EXISTS';
     protected const DROPTABLE = 'DROP TABLE';
     protected const PRIMARYKEY = 'INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT';
-    protected const CREATE_RELATIONSHIP = '    FOREIGN KEY (parent_id)
-        REFERENCES parent(id)
-        ON DELETE CASCADE';
 
     /**
      * Builder constructor.
