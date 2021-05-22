@@ -48,13 +48,13 @@ class Migrate extends Command
         natsort($files);
 
         foreach ($files as $file) {
-            // TODO: remove the prefix from the file.
+            $name = $file;
             if (is_numeric($file[0])) {
-                $file = preg_replace('/^[0-9]+_/', '', $file);
+                $name = preg_replace('/^[0-9]+_/', '', $file);
             }
 
-            $className = $this->filenameSnakeToPascal($file);
-            $tableName = $this->getTableName($file);
+            $className = $this->filenameSnakeToPascal($name);
+            $tableName = $this->getTableName($name);
 
             $builder = new Builder($tableName, new Blueprint());
             if ($builder->tableExists()) {
