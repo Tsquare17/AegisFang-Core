@@ -24,6 +24,7 @@ class MakeMigration extends Make
     public function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED);
+        $this->addOption('order', 'o', InputArgument::OPTIONAL, 'Set the migration order');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -34,6 +35,10 @@ class MakeMigration extends Make
         $migrationFileName = 'create_' . $name . '_table.php';
         $migrationClassName = Strings::snakeToPascal($name);
         $newFile = $migrationsPath . $migrationFileName;
+
+        if ($order = $input->getOption('order')) {
+            $newFile = $migrationsPath . $order . '_' . $migrationFileName;
+        }
 
         if (file_exists($newFile)) {
             $output->writeln("<error>File {$migrationFileName} already exists.</>");
