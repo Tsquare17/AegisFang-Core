@@ -2,9 +2,9 @@
 
 namespace AegisFang\Tests\Fixtures;
 
-use AegisFang\Controller\JsonController;
+use AegisFang\Controller\ApiController;
 
-class Json extends JsonController
+class Json extends ApiController
 {
     public function index()
     {

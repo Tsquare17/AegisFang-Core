@@ -6,3 +6,4 @@ putenv('DB_PORT=3306');
 putenv('DB_NAME=aegistest');
 putenv('DB_USERNAME=aegistest');
 putenv('DB_PASSWORD=');
+putenv('RUNNING_TESTS=true');

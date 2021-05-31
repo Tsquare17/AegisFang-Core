@@ -8,9 +8,9 @@ use AegisFang\Router\Router;
 
 /**
  * Class JsonRestController
- * @package AegisFang\Router
+ * @package AegisFang\Controller
  */
-class JsonRestController extends JsonController
+class RestController extends ApiController
 {
     protected JsonResponse $response;
     protected Router $router;
@@ -32,8 +32,10 @@ class JsonRestController extends JsonController
      * Send the response.
      *
      * @param mixed ...$args
+     *
+     * @throws \JsonException
      */
-    public function dispatch(...$args)
+    public function dispatch(...$args): string
     {
         $args = $this->unsetGuarded($args);
 

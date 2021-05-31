@@ -4,6 +4,7 @@ namespace AegisFang\Tests;
 
 use AegisFang\Container\Container;
 use AegisFang\Router\Router;
+use AegisFang\View\View;
 use PHPUnit\Framework\TestCase;
 
 class ControllerTest extends TestCase
@@ -23,7 +24,7 @@ class ControllerTest extends TestCase
      * @test
      * @runInSeparateProcess
      */
-    public function json_controller_outputs_json(): void
+    public function api_controller_outputs_json(): void
     {
         $data = [
             'names' => [
@@ -40,5 +41,17 @@ class ControllerTest extends TestCase
         echo $this->router->direct($this->container, '/');
 
         $this->expectOutputString(json_encode($data));
+    }
+
+    /** @test */
+    public function base_controller_outputs_views(): void
+    {
+        $this->router->get([
+            '/' => '\AegisFang\Tests\Fixtures\Controller::index'
+        ]);
+
+        $content = $this->router->direct($this->container, '/');
+
+        $this->assertEquals('headingcontentcopyright', $content);
     }
 }

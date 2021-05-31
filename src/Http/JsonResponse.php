@@ -15,9 +15,9 @@ class JsonResponse extends Response
      * @param array $headers
      * @param int   $statusCode
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function make($content = [], $headers = [], $statusCode = 200): Response
+    public function make($content = [], $headers = [], $statusCode = 200): JsonResponse
     {
         $this->setBody($content);
 
@@ -34,6 +34,7 @@ class JsonResponse extends Response
 
     /**
      * Send the response.
+     * @throws \JsonException
      */
     public function dispatch(): string
     {
